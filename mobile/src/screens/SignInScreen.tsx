@@ -21,6 +21,17 @@ import {
   Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import { LinearGradient } from 'expo-linear-gradient';
+import {
+  ShoppingBagIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
+  GoogleIcon,
+  AppleIcon,
+  SuccessCheckIcon,
+} from '../components/Icons';
 
 const COLORS = {
   primary: '#3B5BDB',
@@ -80,7 +91,7 @@ const SignInScreen = ({ navigation }: any) => {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
-              <Text style={styles.logoIconText}>🛍️</Text>
+              <ShoppingBagIcon size={32} color="#FFFFFF" />
             </LinearGradient>
             <Text style={styles.logoText}>ShopLynk</Text>
           </Animated.View>
@@ -99,7 +110,7 @@ const SignInScreen = ({ navigation }: any) => {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email or Phone</Text>
                 <View style={[styles.inputContainer, formData.email && styles.inputFocused]}>
-                  <Text style={styles.icon}>✉️</Text>
+                  <EnvelopeIcon size={20} color={formData.email ? COLORS.primary : COLORS.textLight} />
                   <TextInput
                     style={styles.input}
                     placeholder="john@example.com"
@@ -116,7 +127,7 @@ const SignInScreen = ({ navigation }: any) => {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
                 <View style={[styles.inputContainer, formData.password && styles.inputFocused]}>
-                  <Text style={styles.icon}>🔒</Text>
+                  <LockClosedIcon size={20} color={formData.password ? COLORS.primary : COLORS.textLight} />
                   <TextInput
                     style={styles.input}
                     placeholder="••••••••"
@@ -129,7 +140,11 @@ const SignInScreen = ({ navigation }: any) => {
                     onPress={() => setShowPassword(!showPassword)}
                     style={styles.eyeButton}
                   >
-                    <Text style={styles.eyeIcon}>{showPassword ? '👁' : '👁‍🗨'}</Text>
+                    {showPassword ? (
+                      <EyeSlashIcon size={20} color={COLORS.textLight} />
+                    ) : (
+                      <EyeIcon size={20} color={COLORS.textLight} />
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -171,7 +186,7 @@ const SignInScreen = ({ navigation }: any) => {
                     </View>
                   ) : (
                     <View style={styles.buttonContent}>
-                      <Text style={styles.buttonIcon}>✓</Text>
+                      <CheckCircleIcon size={24} color="#FFFFFF" />
                       <Text style={styles.buttonText}>Sign In</Text>
                     </View>
                   )}
@@ -188,11 +203,11 @@ const SignInScreen = ({ navigation }: any) => {
               {/* Social Login Buttons */}
               <View style={styles.socialContainer}>
                 <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
-                  <Text style={styles.googleIcon}>G</Text>
+                  <GoogleIcon size={20} />
                   <Text style={styles.socialText}>Google</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
-                  <Text style={styles.appleIcon}>🍎</Text>
+                  <AppleIcon size={20} color={COLORS.textDark} />
                   <Text style={styles.socialText}>Apple</Text>
                 </TouchableOpacity>
               </View>
@@ -211,11 +226,11 @@ const SignInScreen = ({ navigation }: any) => {
             {/* Trust Badges */}
             <View style={styles.trustContainer}>
               <View style={styles.trustBadge}>
-                <Text style={styles.trustIcon}>✓</Text>
+                <SuccessCheckIcon size={16} color={COLORS.success} />
                 <Text style={styles.trustText}>Secure Login</Text>
               </View>
               <View style={styles.trustBadge}>
-                <Text style={styles.trustIcon}>✓</Text>
+                <SuccessCheckIcon size={16} color={COLORS.success} />
                 <Text style={styles.trustText}>256-bit Encryption</Text>
               </View>
             </View>
@@ -257,9 +272,6 @@ const styles = StyleSheet.create({
       },
       android: { elevation: 10 },
     }),
-  },
-  logoIconText: {
-    fontSize: 32,
   },
   logoText: {
     fontSize: 28,
@@ -316,8 +328,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    paddingHorizontal: 16,
+    paddingLeft: 16,
+    paddingRight: 12,
     height: 56,
+    gap: 12,
   },
   inputFocused: {
     borderColor: COLORS.primary,
@@ -332,10 +346,6 @@ const styles = StyleSheet.create({
       android: { elevation: 4 },
     }),
   },
-  icon: {
-    fontSize: 20,
-    marginRight: 12,
-  },
   input: {
     flex: 1,
     fontSize: 16,
@@ -344,9 +354,6 @@ const styles = StyleSheet.create({
   },
   eyeButton: {
     padding: 8,
-  },
-  eyeIcon: {
-    fontSize: 20,
   },
   rememberRow: {
     flexDirection: 'row',
@@ -407,16 +414,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
   },
   loadingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-  },
-  buttonIcon: {
-    fontSize: 24,
-    marginRight: 8,
   },
   buttonText: {
     fontSize: 18,
@@ -457,15 +461,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 12,
     backgroundColor: COLORS.white,
-  },
-  googleIcon: {
-    fontSize: 20,
-    marginRight: 8,
-    fontFamily: 'Inter_800ExtraBold',
-  },
-  appleIcon: {
-    fontSize: 20,
-    marginRight: 8,
+    gap: 8,
   },
   socialText: {
     fontSize: 16,
@@ -494,12 +490,7 @@ const styles = StyleSheet.create({
   trustBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  trustIcon: {
-    fontSize: 16,
-    color: COLORS.success,
-    marginRight: 6,
-    fontFamily: 'Inter_800ExtraBold',
+    gap: 6,
   },
   trustText: {
     fontSize: 11,

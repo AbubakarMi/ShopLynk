@@ -5,7 +5,13 @@
       "Bash(npm install:*)",
       "Bash(npm run lint)",
       "Bash(npm run lint:fix:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(npx expo install:*)",
+      "Bash(npx expo start:*)",
+      "Bash(taskkill:*)",
+      "Bash(nul)",
+      "Bash(Get-Process node -ErrorAction SilentlyContinue)",
+      "Bash(Stop-Process -Force -ErrorAction SilentlyContinue)"
     ],
     "deny": [],
     "ask": []
