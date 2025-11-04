@@ -28,7 +28,6 @@ const COLORS = {
   accent: '#00C896',
   accent50: '#ECFDF8',
   accent500: '#00C896',
-  accent600: '#00A77D',
   white: '#FFFFFF',
   surface: '#F9FAFB',
   textDark: '#1A1A1A',
@@ -60,7 +59,6 @@ const SignUpScreen = ({ navigation }: any) => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Sign up:', formData);
     setIsLoading(false);
@@ -68,7 +66,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F7FF" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -91,193 +89,199 @@ const SignUpScreen = ({ navigation }: any) => {
             <Text style={styles.logoText}>ShopLynk</Text>
           </Animated.View>
 
-          {/* Header */}
-          <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
-            <LinearGradient
-              colors={[COLORS.accent50, COLORS.primary + '10']}
-              style={styles.trialBadge}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            >
-              <Text style={styles.trialIcon}>✨</Text>
-              <Text style={styles.trialText}>14-Day Free Trial • No Credit Card</Text>
-            </LinearGradient>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Launch your WhatsApp store in minutes</Text>
-          </Animated.View>
-
-          {/* Form */}
-          <Animated.View entering={FadeInUp.duration(600).delay(200)} style={styles.form}>
-            {/* Full Name */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Full Name</Text>
-              <View style={[styles.inputContainer, formData.fullName && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>👤</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="John Doe"
-                  placeholderTextColor={COLORS.textLight}
-                  value={formData.fullName}
-                  onChangeText={(text) => setFormData({ ...formData, fullName: text })}
-                />
-              </View>
+          {/* Card Container */}
+          <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.card}>
+            {/* Header */}
+            <View style={styles.header}>
+              <LinearGradient
+                colors={[COLORS.accent50, '#EEF2FF']}
+                style={styles.trialBadge}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.sparkleIcon}>✨</Text>
+                <Text style={styles.trialText}>14-Day Free Trial • No Credit Card</Text>
+              </LinearGradient>
+              <Text style={styles.title}>Create Account</Text>
+              <Text style={styles.subtitle}>Launch your WhatsApp store in minutes</Text>
             </View>
 
-            {/* Business Name */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Business Name</Text>
-              <View style={[styles.inputContainer, formData.businessName && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>🏪</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="My Awesome Store"
-                  placeholderTextColor={COLORS.textLight}
-                  value={formData.businessName}
-                  onChangeText={(text) => setFormData({ ...formData, businessName: text })}
-                />
-              </View>
-            </View>
+            {/* Form */}
+            <View style={styles.form}>
+              {/* Row 1: Full Name & Business Name */}
+              <View style={styles.row}>
+                <View style={styles.halfInput}>
+                  <Text style={styles.label}>Full Name</Text>
+                  <View style={[styles.inputContainer, formData.fullName && styles.inputFocused]}>
+                    <Text style={styles.icon}>👤</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="John Doe"
+                      placeholderTextColor={COLORS.textLight}
+                      value={formData.fullName}
+                      onChangeText={(text) => setFormData({ ...formData, fullName: text })}
+                    />
+                  </View>
+                </View>
 
-            {/* Email */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
-              <View style={[styles.inputContainer, formData.email && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>📧</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="john@example.com"
-                  placeholderTextColor={COLORS.textLight}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={formData.email}
-                  onChangeText={(text) => setFormData({ ...formData, email: text })}
-                />
+                <View style={styles.halfInput}>
+                  <Text style={styles.label}>Business Name</Text>
+                  <View style={[styles.inputContainer, formData.businessName && styles.inputFocused]}>
+                    <Text style={styles.icon}>🏪</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="My Store"
+                      placeholderTextColor={COLORS.textLight}
+                      value={formData.businessName}
+                      onChangeText={(text) => setFormData({ ...formData, businessName: text })}
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
 
-            {/* Phone Number */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Phone Number</Text>
-              <View style={[styles.inputContainer, formData.phone && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>📱</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="+1 (555) 000-0000"
-                  placeholderTextColor={COLORS.textLight}
-                  keyboardType="phone-pad"
-                  value={formData.phone}
-                  onChangeText={(text) => setFormData({ ...formData, phone: text })}
-                />
+              {/* Row 2: Email & Phone */}
+              <View style={styles.row}>
+                <View style={styles.halfInput}>
+                  <Text style={styles.label}>Email</Text>
+                  <View style={[styles.inputContainer, formData.email && styles.inputFocused]}>
+                    <Text style={styles.icon}>✉️</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="john@example.com"
+                      placeholderTextColor={COLORS.textLight}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      value={formData.email}
+                      onChangeText={(text) => setFormData({ ...formData, email: text })}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.halfInput}>
+                  <Text style={styles.label}>Phone Number</Text>
+                  <View style={[styles.inputContainer, formData.phone && styles.inputFocused]}>
+                    <Text style={styles.icon}>📞</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="+1 (555) 000-0000"
+                      placeholderTextColor={COLORS.textLight}
+                      keyboardType="phone-pad"
+                      value={formData.phone}
+                      onChangeText={(text) => setFormData({ ...formData, phone: text })}
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
 
-            {/* Password */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={[styles.inputContainer, formData.password && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>🔒</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor={COLORS.textLight}
-                  secureTextEntry={!showPassword}
-                  value={formData.password}
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <Text style={styles.eyeIconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
-                </TouchableOpacity>
+              {/* Password */}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={[styles.inputContainer, formData.password && styles.inputFocused]}>
+                  <Text style={styles.icon}>🔒</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor={COLORS.textLight}
+                    secureTextEntry={!showPassword}
+                    value={formData.password}
+                    onChangeText={(text) => setFormData({ ...formData, password: text })}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeButton}
+                  >
+                    <Text style={styles.eyeIcon}>{showPassword ? '👁' : '👁‍🗨'}</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.passwordHint}>
+                  Must be at least 8 characters with uppercase, lowercase, and numbers
+                </Text>
               </View>
-              <Text style={styles.passwordHint}>Must be at least 8 characters with uppercase, lowercase, and numbers</Text>
-            </View>
 
-            {/* Terms & Conditions Checkbox */}
-            <View style={styles.termsRow}>
+              {/* Terms Checkbox */}
               <TouchableOpacity
                 style={styles.termsContainer}
                 onPress={() => setFormData({ ...formData, agreeToTerms: !formData.agreeToTerms })}
+                activeOpacity={0.7}
               >
                 <View style={[styles.checkbox, formData.agreeToTerms && styles.checkboxChecked]}>
                   {formData.agreeToTerms && <Text style={styles.checkmark}>✓</Text>}
                 </View>
-                <Text style={styles.termsTextMain}>
+                <Text style={styles.termsText}>
                   I agree to the{' '}
                   <Text style={styles.termsLink}>Terms of Service</Text>
                   {' '}and{' '}
                   <Text style={styles.termsLink}>Privacy Policy</Text>
                 </Text>
               </TouchableOpacity>
-            </View>
 
-            {/* Create Account Button */}
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleSignUp}
-              disabled={isLoading || !formData.agreeToTerms}
-              style={[styles.signUpButtonContainer, (isLoading || !formData.agreeToTerms) && styles.buttonDisabled]}
-            >
-              <LinearGradient
-                colors={[COLORS.primary, COLORS.primary600]}
-                style={styles.signUpButton}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+              {/* Create Account Button */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleSignUp}
+                disabled={isLoading || !formData.agreeToTerms}
+                style={[styles.submitButton, (isLoading || !formData.agreeToTerms) && styles.buttonDisabled]}
               >
-                {isLoading ? (
-                  <ActivityIndicator color={COLORS.white} size="small" />
-                ) : (
-                  <>
-                    <Text style={styles.sparkleIcon}>✨</Text>
-                    <Text style={styles.signUpButtonText}>Create Account</Text>
-                  </>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
+                <LinearGradient
+                  colors={[COLORS.primary, COLORS.primary600]}
+                  style={styles.submitGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  {isLoading ? (
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator color={COLORS.white} size="small" />
+                      <Text style={styles.buttonText}>Creating Account...</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.buttonContent}>
+                      <Text style={styles.buttonIcon}>✨</Text>
+                      <Text style={styles.buttonText}>Create Account</Text>
+                    </View>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
 
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.divider} />
-              <Text style={styles.dividerText}>Or sign up with</Text>
-              <View style={styles.divider} />
+              {/* Divider */}
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>Or sign up with</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              {/* Social Buttons */}
+              <View style={styles.socialContainer}>
+                <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                  <Text style={styles.googleIcon}>G</Text>
+                  <Text style={styles.socialText}>Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                  <Text style={styles.appleIcon}>🍎</Text>
+                  <Text style={styles.socialText}>Apple</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
-            {/* Social Signup Buttons */}
-            <View style={styles.socialContainer}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>G</Text>
-                <Text style={styles.socialText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>🍎</Text>
-                <Text style={styles.socialText}>Apple</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-
-          {/* Footer */}
-          <Animated.View entering={FadeInUp.duration(600).delay(300)} style={styles.footer}>
-            <Text style={styles.footerText}>
-              Already have an account?{' '}
-              <Text
-                style={styles.signInLink}
-                onPress={() => navigation.navigate('SignIn')}
-              >
-                Sign In
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Already have an account?{' '}
+                <Text style={styles.footerLink} onPress={() => navigation.navigate('SignIn')}>
+                  Sign In
+                </Text>
               </Text>
-            </Text>
-          </Animated.View>
-
-          {/* Trust Badges */}
-          <Animated.View entering={FadeInUp.duration(600).delay(400)} style={styles.trustBadges}>
-            <View style={styles.trustBadge}>
-              <Text style={styles.trustIcon}>✅</Text>
-              <Text style={styles.trustText}>Free 14-Day Trial</Text>
             </View>
-            <View style={styles.trustBadge}>
-              <Text style={styles.trustIcon}>✅</Text>
-              <Text style={styles.trustText}>No Credit Card Required</Text>
+
+            {/* Trust Indicators */}
+            <View style={styles.trustContainer}>
+              <View style={styles.trustBadge}>
+                <Text style={styles.trustIcon}>✓</Text>
+                <Text style={styles.trustText}>Free 14-Day Trial</Text>
+              </View>
+              <View style={styles.trustBadge}>
+                <Text style={styles.trustIcon}>✓</Text>
+                <Text style={styles.trustText}>No Credit Card Required</Text>
+              </View>
             </View>
           </Animated.View>
         </ScrollView>
@@ -289,11 +293,11 @@ const SignUpScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#F5F7FF',
   },
   scrollContent: {
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: 16,
+    paddingVertical: 48,
   },
   logoContainer: {
     flexDirection: 'row',
@@ -318,11 +322,27 @@ const styles = StyleSheet.create({
       android: { elevation: 10 },
     }),
   },
-  logoIconText: { fontSize: 28 },
-  logoText: {
+  logoIconText: {
     fontSize: 32,
+  },
+  logoText: {
+    fontSize: 28,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
+  },
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 24,
+    padding: 32,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 20 },
+        shadowOpacity: 0.15,
+        shadowRadius: 40,
+      },
+      android: { elevation: 8 },
+    }),
   },
   header: {
     alignItems: 'center',
@@ -332,12 +352,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 24,
-    marginBottom: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 16,
   },
-  trialIcon: {
-    fontSize: 18,
+  sparkleIcon: {
+    fontSize: 20,
     marginRight: 8,
   },
   trialText: {
@@ -346,20 +366,28 @@ const styles = StyleSheet.create({
     color: COLORS.accent,
   },
   title: {
-    fontSize: 48,
+    fontSize: 40,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
-    marginBottom: 12,
+    marginBottom: 16,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Inter_400Regular',
     color: COLORS.textLight,
     textAlign: 'center',
   },
   form: {
     marginBottom: 32,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 20,
+  },
+  halfInput: {
+    flex: 1,
   },
   inputGroup: {
     marginBottom: 20,
@@ -376,19 +404,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.border,
     borderRadius: 12,
-    backgroundColor: COLORS.white + 'CC',
-    paddingHorizontal: 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-      },
-      android: { elevation: 2 },
-    }),
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    paddingHorizontal: 12,
+    height: 56,
   },
-  inputContainerFocused: {
+  inputFocused: {
     borderColor: COLORS.primary,
     backgroundColor: COLORS.white,
     ...Platform.select({
@@ -396,26 +416,25 @@ const styles = StyleSheet.create({
         shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
-        shadowRadius: 12,
+        shadowRadius: 8,
       },
-      android: { elevation: 4 },
+      android: { elevation: 2 },
     }),
   },
-  inputIcon: {
+  icon: {
     fontSize: 20,
     marginRight: 12,
   },
   input: {
     flex: 1,
-    paddingVertical: 16,
     fontSize: 16,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Inter_400Regular',
     color: COLORS.textDark,
   },
-  eyeIcon: {
-    padding: 8,
+  eyeButton: {
+    padding: 4,
   },
-  eyeIconText: {
+  eyeIcon: {
     fontSize: 20,
   },
   passwordHint: {
@@ -424,12 +443,10 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     marginTop: 8,
   },
-  termsRow: {
-    marginBottom: 20,
-  },
   termsContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    marginBottom: 24,
   },
   checkbox: {
     width: 20,
@@ -438,9 +455,9 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 6,
     marginRight: 12,
+    marginTop: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 2,
   },
   checkboxChecked: {
     backgroundColor: COLORS.primary,
@@ -448,10 +465,10 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     color: COLORS.white,
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Inter_800ExtraBold',
   },
-  termsTextMain: {
+  termsText: {
     flex: 1,
     fontSize: 14,
     fontFamily: 'Inter_400Regular',
@@ -462,15 +479,12 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontFamily: 'Inter_700Bold',
   },
-  signUpButtonContainer: {
-    marginBottom: 20,
+  submitButton: {
+    marginBottom: 24,
   },
-  signUpButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 18,
+  submitGradient: {
     borderRadius: 12,
+    paddingVertical: 16,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
@@ -478,27 +492,38 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 20,
       },
-      android: { elevation: 12 },
+      android: { elevation: 8 },
     }),
   },
-  signUpButtonText: {
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  buttonIcon: {
+    fontSize: 24,
+    marginRight: 8,
+  },
+  buttonText: {
     fontSize: 18,
     fontFamily: 'Inter_700Bold',
     color: COLORS.white,
   },
-  sparkleIcon: {
-    fontSize: 24,
-    marginRight: 8,
-  },
   buttonDisabled: {
     opacity: 0.5,
   },
-  dividerContainer: {
+  divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
   },
-  divider: {
+  dividerLine: {
     flex: 1,
     height: 1,
     backgroundColor: COLORS.border,
@@ -511,24 +536,27 @@ const styles = StyleSheet.create({
   },
   socialContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 32,
+    gap: 16,
   },
   socialButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
+    paddingVertical: 12,
     borderWidth: 2,
     borderColor: COLORS.border,
     borderRadius: 12,
     backgroundColor: COLORS.white,
   },
-  socialIcon: {
+  googleIcon: {
+    fontSize: 20,
+    fontFamily: 'Inter_800ExtraBold',
+    marginRight: 8,
+  },
+  appleIcon: {
     fontSize: 20,
     marginRight: 8,
-    fontFamily: 'Inter_800ExtraBold',
   },
   socialText: {
     fontSize: 16,
@@ -545,23 +573,24 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     textAlign: 'center',
   },
-  signInLink: {
+  footerLink: {
     color: COLORS.primary,
     fontFamily: 'Inter_700Bold',
   },
-  trustBadges: {
+  trustContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 24,
-    paddingTop: 8,
   },
   trustBadge: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   trustIcon: {
-    fontSize: 14,
-    marginRight: 6,
+    fontSize: 16,
+    color: COLORS.success,
+    marginRight: 4,
+    fontFamily: 'Inter_800ExtraBold',
   },
   trustText: {
     fontSize: 11,

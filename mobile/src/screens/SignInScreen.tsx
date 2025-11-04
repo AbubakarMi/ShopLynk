@@ -62,7 +62,7 @@ const SignInScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F7FF" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -85,135 +85,139 @@ const SignInScreen = ({ navigation }: any) => {
             <Text style={styles.logoText}>ShopLynk</Text>
           </Animated.View>
 
-          {/* Header */}
-          <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
-            <Text style={styles.title}>Welcome Back</Text>
-            <Text style={styles.subtitle}>Enter your credentials to access your store</Text>
-          </Animated.View>
-
-          {/* Form */}
-          <Animated.View entering={FadeInUp.duration(600).delay(200)} style={styles.form}>
-            {/* Email / Phone */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email or Phone</Text>
-              <View style={[styles.inputContainer, formData.email && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>📧</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="john@example.com"
-                  placeholderTextColor={COLORS.textLight}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={formData.email}
-                  onChangeText={(text) => setFormData({ ...formData, email: text })}
-                />
-              </View>
+          {/* Card Container */}
+          <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.card}>
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.title}>Welcome Back</Text>
+              <Text style={styles.subtitle}>Enter your credentials to access your store</Text>
             </View>
 
-            {/* Password */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={[styles.inputContainer, formData.password && styles.inputContainerFocused]}>
-                <Text style={styles.inputIcon}>🔒</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor={COLORS.textLight}
-                  secureTextEntry={!showPassword}
-                  value={formData.password}
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
-                />
+            {/* Form */}
+            <View style={styles.form}>
+              {/* Email / Phone */}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email or Phone</Text>
+                <View style={[styles.inputContainer, formData.email && styles.inputFocused]}>
+                  <Text style={styles.icon}>✉️</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="john@example.com"
+                    placeholderTextColor={COLORS.textLight}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={formData.email}
+                    onChangeText={(text) => setFormData({ ...formData, email: text })}
+                  />
+                </View>
+              </View>
+
+              {/* Password */}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={[styles.inputContainer, formData.password && styles.inputFocused]}>
+                  <Text style={styles.icon}>🔒</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor={COLORS.textLight}
+                    secureTextEntry={!showPassword}
+                    value={formData.password}
+                    onChangeText={(text) => setFormData({ ...formData, password: text })}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeButton}
+                  >
+                    <Text style={styles.eyeIcon}>{showPassword ? '👁' : '👁‍🗨'}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Remember Me & Forgot Password */}
+              <View style={styles.rememberRow}>
                 <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
+                  style={styles.rememberContainer}
+                  onPress={() => setFormData({ ...formData, rememberMe: !formData.rememberMe })}
+                  activeOpacity={0.7}
                 >
-                  <Text style={styles.eyeIconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                  <View style={[styles.checkbox, formData.rememberMe && styles.checkboxChecked]}>
+                    {formData.rememberMe && <Text style={styles.checkmark}>✓</Text>}
+                  </View>
+                  <Text style={styles.rememberText}>Remember me</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Login Button */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleSignIn}
+                disabled={isLoading}
+                style={[styles.submitButton, isLoading && styles.buttonDisabled]}
+              >
+                <LinearGradient
+                  colors={[COLORS.primary, COLORS.primary600]}
+                  style={styles.submitGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  {isLoading ? (
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator color={COLORS.white} size="small" />
+                      <Text style={styles.buttonText}>Signing In...</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.buttonContent}>
+                      <Text style={styles.buttonIcon}>✓</Text>
+                      <Text style={styles.buttonText}>Sign In</Text>
+                    </View>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>Or continue with</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              {/* Social Login Buttons */}
+              <View style={styles.socialContainer}>
+                <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                  <Text style={styles.googleIcon}>G</Text>
+                  <Text style={styles.socialText}>Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                  <Text style={styles.appleIcon}>🍎</Text>
+                  <Text style={styles.socialText}>Apple</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Remember Me & Forgot Password */}
-            <View style={styles.rememberRow}>
-              <TouchableOpacity
-                style={styles.rememberContainer}
-                onPress={() => setFormData({ ...formData, rememberMe: !formData.rememberMe })}
-              >
-                <View style={[styles.checkbox, formData.rememberMe && styles.checkboxChecked]}>
-                  {formData.rememberMe && <Text style={styles.checkmark}>✓</Text>}
-                </View>
-                <Text style={styles.rememberText}>Remember me</Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Login Button */}
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleSignIn}
-              disabled={isLoading}
-              style={[styles.signInButtonContainer, isLoading && styles.buttonDisabled]}
-            >
-              <LinearGradient
-                colors={[COLORS.primary, COLORS.primary600]}
-                style={styles.signInButton}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              >
-                {isLoading ? (
-                  <ActivityIndicator color={COLORS.white} size="small" />
-                ) : (
-                  <>
-                    <Text style={styles.checkIcon}>✅</Text>
-                    <Text style={styles.signInButtonText}>Sign In</Text>
-                  </>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.divider} />
-              <Text style={styles.dividerText}>Or continue with</Text>
-              <View style={styles.divider} />
-            </View>
-
-            {/* Social Login Buttons */}
-            <View style={styles.socialContainer}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>G</Text>
-                <Text style={styles.socialText}>Google</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>🍎</Text>
-                <Text style={styles.socialText}>Apple</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-
-          {/* Footer */}
-          <Animated.View entering={FadeInUp.duration(600).delay(300)} style={styles.footer}>
-            <Text style={styles.footerText}>
-              Don't have an account?{' '}
-              <Text
-                style={styles.signUpLink}
-                onPress={() => navigation.navigate('SignUp')}
-              >
-                Create one now
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Don't have an account?{' '}
+                <Text style={styles.footerLink} onPress={() => navigation.navigate('SignUp')}>
+                  Create one now
+                </Text>
               </Text>
-            </Text>
-          </Animated.View>
-
-          {/* Trust Badges */}
-          <Animated.View entering={FadeInUp.duration(600).delay(400)} style={styles.trustBadges}>
-            <View style={styles.trustBadge}>
-              <Text style={styles.trustIcon}>✅</Text>
-              <Text style={styles.trustText}>Secure Login</Text>
             </View>
-            <View style={styles.trustBadge}>
-              <Text style={styles.trustIcon}>✅</Text>
-              <Text style={styles.trustText}>256-bit Encryption</Text>
+
+            {/* Trust Badges */}
+            <View style={styles.trustContainer}>
+              <View style={styles.trustBadge}>
+                <Text style={styles.trustIcon}>✓</Text>
+                <Text style={styles.trustText}>Secure Login</Text>
+              </View>
+              <View style={styles.trustBadge}>
+                <Text style={styles.trustIcon}>✓</Text>
+                <Text style={styles.trustText}>256-bit Encryption</Text>
+              </View>
             </View>
           </Animated.View>
         </ScrollView>
@@ -225,10 +229,10 @@ const SignInScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#F5F7FF',
   },
   scrollContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingVertical: 48,
   },
   logoContainer: {
@@ -254,18 +258,34 @@ const styles = StyleSheet.create({
       android: { elevation: 10 },
     }),
   },
-  logoIconText: { fontSize: 32 },
+  logoIconText: {
+    fontSize: 32,
+  },
   logoText: {
-    fontSize: 36,
+    fontSize: 28,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
+  },
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 24,
+    padding: 32,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 20 },
+        shadowOpacity: 0.15,
+        shadowRadius: 40,
+      },
+      android: { elevation: 8 },
+    }),
   },
   header: {
     alignItems: 'center',
     marginBottom: 32,
   },
   title: {
-    fontSize: 48,
+    fontSize: 40,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     marginBottom: 16,
@@ -295,19 +315,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.border,
     borderRadius: 12,
-    backgroundColor: COLORS.white + 'CC',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     paddingHorizontal: 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-      },
-      android: { elevation: 2 },
-    }),
+    height: 56,
   },
-  inputContainerFocused: {
+  inputFocused: {
     borderColor: COLORS.primary,
     backgroundColor: COLORS.white,
     ...Platform.select({
@@ -320,21 +332,20 @@ const styles = StyleSheet.create({
       android: { elevation: 4 },
     }),
   },
-  inputIcon: {
+  icon: {
     fontSize: 20,
     marginRight: 12,
   },
   input: {
     flex: 1,
-    paddingVertical: 18,
     fontSize: 16,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textDark,
   },
-  eyeIcon: {
+  eyeButton: {
     padding: 8,
   },
-  eyeIconText: {
+  eyeIcon: {
     fontSize: 20,
   },
   rememberRow: {
@@ -363,7 +374,7 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     color: COLORS.white,
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Inter_800ExtraBold',
   },
   rememberText: {
@@ -376,15 +387,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_700Bold',
     color: COLORS.primary,
   },
-  signInButtonContainer: {
+  submitButton: {
     marginBottom: 24,
   },
-  signInButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 18,
+  submitGradient: {
     borderRadius: 12,
+    paddingVertical: 16,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
@@ -395,24 +403,35 @@ const styles = StyleSheet.create({
       android: { elevation: 12 },
     }),
   },
-  signInButtonText: {
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  buttonIcon: {
+    fontSize: 24,
+    marginRight: 8,
+  },
+  buttonText: {
     fontSize: 18,
     fontFamily: 'Inter_700Bold',
     color: COLORS.white,
   },
-  checkIcon: {
-    fontSize: 24,
-    marginRight: 8,
-  },
   buttonDisabled: {
     opacity: 0.7,
   },
-  dividerContainer: {
+  divider: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
   },
-  divider: {
+  dividerLine: {
     flex: 1,
     height: 1,
     backgroundColor: COLORS.border,
@@ -433,16 +452,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
+    paddingVertical: 12,
     borderWidth: 2,
     borderColor: COLORS.border,
     borderRadius: 12,
     backgroundColor: COLORS.white,
   },
-  socialIcon: {
+  googleIcon: {
     fontSize: 20,
     marginRight: 8,
     fontFamily: 'Inter_800ExtraBold',
+  },
+  appleIcon: {
+    fontSize: 20,
+    marginRight: 8,
   },
   socialText: {
     fontSize: 16,
@@ -459,11 +482,11 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     textAlign: 'center',
   },
-  signUpLink: {
+  footerLink: {
     color: COLORS.primary,
     fontFamily: 'Inter_700Bold',
   },
-  trustBadges: {
+  trustContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 24,
@@ -473,8 +496,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   trustIcon: {
-    fontSize: 14,
+    fontSize: 16,
+    color: COLORS.success,
     marginRight: 6,
+    fontFamily: 'Inter_800ExtraBold',
   },
   trustText: {
     fontSize: 11,
