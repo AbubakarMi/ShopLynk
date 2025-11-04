@@ -37,7 +37,7 @@ const COLORS = {
   success: '#22C55E',
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_600SemiBold,
@@ -66,7 +66,10 @@ const HomeScreen = () => {
             <Text style={styles.logoText}>ShopLynk</Text>
           </Animated.View>
           <Animated.View entering={FadeInDown.duration(500).delay(100)}>
-            <TouchableOpacity style={styles.signInButton}>
+            <TouchableOpacity
+              style={styles.signInButton}
+              onPress={() => navigation.navigate('SignIn')}
+            >
               <Text style={styles.signInText}>Sign In</Text>
             </TouchableOpacity>
           </Animated.View>
@@ -103,7 +106,10 @@ const HomeScreen = () => {
           </Animated.Text>
 
           <Animated.View entering={FadeInUp.duration(600).delay(500)} style={styles.ctaContainer}>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('SignUp')}
+            >
               <LinearGradient
                 colors={[COLORS.primary, COLORS.primary600]}
                 style={styles.ctaPrimary}
@@ -317,7 +323,10 @@ const HomeScreen = () => {
             <Text style={styles.ctaSubtitle}>
               Join thousands of merchants growing their business on WhatsApp.
             </Text>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('SignUp')}
+            >
               <LinearGradient
                 colors={[COLORS.primary, COLORS.primary600]}
                 style={styles.ctaButton}
@@ -413,71 +422,71 @@ const styles = StyleSheet.create({
   signInButton: { paddingHorizontal: 16, paddingVertical: 8 },
   signInText: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: COLORS.textLight },
 
-  hero: { paddingHorizontal: 24, paddingVertical: 56, alignItems: 'center' },
+  hero: { paddingHorizontal: 24, paddingVertical: 64, alignItems: 'center' },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: COLORS.primary + '50',
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    marginBottom: 24,
+    borderRadius: 24,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    marginBottom: 32,
   },
-  badgeDot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },
-  badgeText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: COLORS.primary },
+  badgeDot: { width: 8, height: 8, borderRadius: 4, marginRight: 10 },
+  badgeText: { fontSize: 12, fontFamily: 'Inter_800ExtraBold', color: COLORS.primary },
   heroTitle: {
-    fontSize: 48,
+    fontSize: 52,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 56,
+    marginBottom: 24,
+    lineHeight: 60,
   },
   heroAccent: { color: COLORS.primary },
   heroSubtitle: {
-    fontSize: 18,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 20,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
     textAlign: 'center',
-    marginBottom: 32,
-    lineHeight: 28,
+    marginBottom: 40,
+    lineHeight: 32,
   },
 
-  ctaContainer: { width: '100%', gap: 12, marginBottom: 24 },
+  ctaContainer: { width: '100%', gap: 16, marginBottom: 32 },
   ctaPrimary: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 18,
-    borderRadius: 14,
+    paddingVertical: 20,
+    borderRadius: 16,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.35,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.4,
+        shadowRadius: 16,
       },
-      android: { elevation: 8 },
+      android: { elevation: 10 },
     }),
   },
   ctaPrimaryText: {
-    fontSize: 17,
-    fontFamily: 'Inter_700Bold',
+    fontSize: 18,
+    fontFamily: 'Inter_800ExtraBold',
     color: COLORS.white,
-    marginRight: 8,
+    marginRight: 10,
   },
-  ctaIcon: { fontSize: 20, color: COLORS.white, fontFamily: 'Inter_700Bold' },
+  ctaIcon: { fontSize: 22, color: COLORS.white, fontFamily: 'Inter_800ExtraBold' },
   ctaSecondary: {
-    paddingVertical: 18,
-    borderRadius: 14,
+    paddingVertical: 20,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: COLORS.border,
     backgroundColor: COLORS.white,
   },
   ctaSecondaryText: {
-    fontSize: 17,
-    fontFamily: 'Inter_700Bold',
+    fontSize: 18,
+    fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     textAlign: 'center',
   },
@@ -486,12 +495,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 16,
-    marginBottom: 32,
+    gap: 20,
+    marginBottom: 48,
   },
   trustBadge: { flexDirection: 'row', alignItems: 'center' },
-  trustCheck: { fontSize: 13, color: COLORS.accent, marginRight: 6, fontFamily: 'Inter_700Bold' },
-  trustText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: COLORS.textLight },
+  trustCheck: {
+    fontSize: 16,
+    color: COLORS.accent,
+    marginRight: 8,
+    fontFamily: 'Inter_800ExtraBold',
+  },
+  trustText: { fontSize: 15, fontFamily: 'Inter_600SemiBold', color: COLORS.textLight },
 
   mockupContainer: { width: width - 48 },
   mockup: {
@@ -533,7 +547,7 @@ const styles = StyleSheet.create({
   mockupText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: COLORS.textLight },
 
   stats: {
-    paddingVertical: 48,
+    paddingVertical: 56,
     paddingHorizontal: 24,
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -541,176 +555,181 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 24,
+    gap: 32,
   },
-  statCard: { width: '47%', alignItems: 'center', paddingVertical: 12 },
-  statValueGradient: { marginBottom: 8 },
+  statCard: { width: '47%', alignItems: 'center', paddingVertical: 16 },
+  statValueGradient: { marginBottom: 12 },
   statValue: {
-    fontSize: 38,
+    fontSize: 44,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.white,
     textAlign: 'center',
   },
   statLabel: {
-    fontSize: 13,
-    fontFamily: 'Inter_600SemiBold',
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
     color: COLORS.textLight,
     textAlign: 'center',
   },
 
   features: { paddingHorizontal: 24, paddingVertical: 64, backgroundColor: COLORS.white },
   sectionLabel: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.primary,
     textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: 1.5,
+    marginBottom: 16,
+    letterSpacing: 2,
   },
   sectionTitle: {
-    fontSize: 38,
+    fontSize: 42,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 46,
+    marginBottom: 20,
+    lineHeight: 50,
   },
   sectionSubtitle: {
-    fontSize: 16,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 18,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
     textAlign: 'center',
-    marginBottom: 40,
-    lineHeight: 25,
+    marginBottom: 48,
+    lineHeight: 28,
   },
 
   featureCard: {
     backgroundColor: COLORS.white,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 24,
+    padding: 28,
     borderWidth: 1,
     borderColor: COLORS.border,
-    marginBottom: 16,
+    marginBottom: 20,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.06,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
       },
-      android: { elevation: 2 },
+      android: { elevation: 4 },
     }),
   },
   featureIcon: {
-    width: 56,
-    height: 56,
+    width: 64,
+    height: 64,
     backgroundColor: COLORS.primary + '10',
-    borderRadius: 14,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  featureIconText: { fontSize: 28 },
+  featureIconText: { fontSize: 32 },
   featureTitle: {
-    fontSize: 19,
+    fontSize: 21,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   featureDesc: {
-    fontSize: 15,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
-    lineHeight: 23,
+    lineHeight: 26,
   },
 
   testimonials: { paddingHorizontal: 24, paddingVertical: 64 },
   testimonialCard: {
     backgroundColor: COLORS.white,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 24,
+    padding: 32,
     borderWidth: 1,
     borderColor: COLORS.border,
-    marginBottom: 16,
+    marginBottom: 20,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
       },
-      android: { elevation: 3 },
+      android: { elevation: 4 },
     }),
   },
-  testimonialRating: { flexDirection: 'row', marginBottom: 16, gap: 4 },
-  star: { fontSize: 18 },
+  testimonialRating: { flexDirection: 'row', marginBottom: 24, gap: 6 },
+  star: { fontSize: 20 },
   testimonialText: {
-    fontSize: 15,
-    fontFamily: 'Inter_400Regular',
-    color: COLORS.textLight,
-    lineHeight: 24,
-    marginBottom: 20,
-  },
-  testimonialDivider: { height: 1, backgroundColor: COLORS.border, marginBottom: 20 },
-  testimonialHeader: { flexDirection: 'row', alignItems: 'center' },
-  testimonialAvatar: { fontSize: 40, marginRight: 16 },
-  testimonialName: {
-    fontSize: 16,
-    fontFamily: 'Inter_700Bold',
+    fontSize: 17,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textDark,
-    marginBottom: 4,
+    lineHeight: 28,
+    marginBottom: 24,
+  },
+  testimonialDivider: { height: 1, backgroundColor: COLORS.border, marginBottom: 24 },
+  testimonialHeader: { flexDirection: 'row', alignItems: 'center' },
+  testimonialAvatar: { fontSize: 48, marginRight: 20 },
+  testimonialName: {
+    fontSize: 18,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.textDark,
+    marginBottom: 6,
   },
   testimonialRole: {
-    fontSize: 14,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
-    marginBottom: 2,
+    marginBottom: 4,
   },
-  testimonialCompany: { fontSize: 13, fontFamily: 'Inter_700Bold', color: COLORS.primary },
+  testimonialCompany: { fontSize: 14, fontFamily: 'Inter_800ExtraBold', color: COLORS.primary },
 
   cta: {
     marginHorizontal: 24,
     marginBottom: 64,
-    borderRadius: 24,
-    padding: 40,
+    borderRadius: 28,
+    padding: 48,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.primary + '20',
+    borderColor: COLORS.primary + '30',
   },
   ctaTitle: {
-    fontSize: 38,
+    fontSize: 44,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 46,
+    marginBottom: 20,
+    lineHeight: 52,
   },
   ctaSubtitle: {
-    fontSize: 16,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 19,
+    fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
     textAlign: 'center',
-    marginBottom: 28,
-    lineHeight: 25,
+    marginBottom: 36,
+    lineHeight: 30,
   },
   ctaButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 36,
-    paddingVertical: 18,
-    borderRadius: 14,
+    paddingHorizontal: 40,
+    paddingVertical: 22,
+    borderRadius: 16,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.35,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.4,
+        shadowRadius: 16,
       },
-      android: { elevation: 8 },
+      android: { elevation: 10 },
     }),
   },
-  ctaButtonText: { fontSize: 17, fontFamily: 'Inter_700Bold', color: COLORS.white, marginRight: 8 },
-  ctaButtonIcon: { fontSize: 20, color: COLORS.white, fontFamily: 'Inter_700Bold' },
+  ctaButtonText: {
+    fontSize: 19,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.white,
+    marginRight: 10,
+  },
+  ctaButtonIcon: { fontSize: 24, color: COLORS.white, fontFamily: 'Inter_800ExtraBold' },
 
   footer: { paddingVertical: 56, paddingHorizontal: 24, alignItems: 'center' },
   footerBrand: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },

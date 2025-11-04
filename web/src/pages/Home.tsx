@@ -59,23 +59,32 @@ const Home = () => {
               >
                 Pricing
               </a>
-              <button className="text-sm font-medium text-textLight hover:text-textDark transition-colors">
+              <Link
+                to="/signin"
+                className="text-sm font-medium text-textLight hover:text-textDark transition-colors"
+              >
                 Sign In
-              </button>
-              <button className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all">
+              </Link>
+              <Link
+                to="/signup"
+                className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all"
+              >
                 Get Started
-              </button>
+              </Link>
             </div>
 
-            <button className="md:hidden px-4 py-2 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-sm font-semibold">
+            <Link
+              to="/signup"
+              className="md:hidden px-4 py-2 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-sm font-semibold"
+            >
               Start Free
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Subtle gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary-50/30 via-white to-white pointer-events-none" />
 
@@ -84,10 +93,10 @@ const Home = () => {
             {/* Badge */}
             <motion.div
               variants={fadeIn}
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-full px-3 sm:px-4 py-2 mb-6 sm:mb-8"
+              className="inline-flex items-center space-x-2.5 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-full px-4 sm:px-5 py-2.5 mb-8 sm:mb-10 hover:scale-105 transition-transform cursor-default"
             >
               <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full animate-pulse" />
-              <span className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="text-xs sm:text-sm font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Trusted by 50,000+ merchants worldwide
               </span>
             </motion.div>
@@ -95,7 +104,7 @@ const Home = () => {
             {/* Headline */}
             <motion.h1
               variants={fadeIn}
-              className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-textDark leading-[1.1] mb-4 sm:mb-6 px-4"
+              className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-textDark leading-[1.15] mb-6 sm:mb-8 px-4"
             >
               Your WhatsApp.
               <br />
@@ -109,7 +118,7 @@ const Home = () => {
             {/* Subheadline */}
             <motion.p
               variants={fadeIn}
-              className="text-base sm:text-xl lg:text-2xl text-textLight max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-4"
+              className="text-lg sm:text-xl lg:text-2xl text-textLight max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed px-4"
             >
               Complete commerce platform for WhatsApp. Launch stores, process orders, scale
               revenue—without building websites.
@@ -118,13 +127,16 @@ const Home = () => {
             {/* CTA Buttons */}
             <motion.div
               variants={fadeIn}
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12 px-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 sm:mb-14 px-4"
             >
-              <button className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-base sm:text-lg font-semibold hover:shadow-xl hover:shadow-primary/30 transition-all flex items-center justify-center space-x-2">
+              <Link
+                to="/signup"
+                className="w-full sm:w-auto group px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-base sm:text-lg font-bold hover:shadow-2xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2"
+              >
                 <span>Start Free Trial</span>
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-textDark border-2 border-border rounded-xl text-base sm:text-lg font-semibold hover:border-primary hover:text-primary transition-all">
+                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+              <button className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-white text-textDark border-2 border-border rounded-xl text-base sm:text-lg font-bold hover:border-primary hover:text-primary hover:bg-primary-50/30 hover:scale-105 transition-all duration-300">
                 View Demo
               </button>
             </motion.div>
@@ -132,13 +144,16 @@ const Home = () => {
             {/* Trust Badges */}
             <motion.div
               variants={fadeIn}
-              className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-textLight mb-12 sm:mb-16 px-4"
+              className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-sm sm:text-base text-textLight mb-16 sm:mb-20 px-4"
             >
               {['14-day free trial', 'No credit card', 'Cancel anytime', '5-min setup'].map(
                 (item, i) => (
-                  <div key={i} className="flex items-center space-x-2">
-                    <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                    <span>{item}</span>
+                  <div
+                    key={i}
+                    className="flex items-center space-x-2 hover:text-primary transition-colors"
+                  >
+                    <CheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
+                    <span className="font-medium">{item}</span>
                   </div>
                 )
               )}
@@ -173,9 +188,9 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-surface to-white border-y border-border">
+      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-surface to-white border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-16">
             {[
               { value: '50K+', label: 'Active Merchants' },
               { value: '5M+', label: 'Orders Processed' },
@@ -188,12 +203,14 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center"
+                className="text-center group cursor-default"
               >
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
                   {stat.value}
                 </div>
-                <div className="text-xs sm:text-sm text-textLight font-medium">{stat.label}</div>
+                <div className="text-sm sm:text-base text-textLight font-semibold">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -272,15 +289,15 @@ const Home = () => {
               <motion.div
                 key={i}
                 variants={fadeIn}
-                className="group bg-white p-6 sm:p-8 rounded-2xl border border-border hover:border-primary-200 hover:shadow-2xl transition-all duration-300"
+                className="group bg-white p-8 sm:p-10 rounded-2xl border border-border hover:border-primary-300 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl flex items-center justify-center mb-5 sm:mb-6 group-hover:scale-110 transition-all duration-300">
-                  <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl flex items-center justify-center mb-6 sm:mb-7 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <feature.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary group-hover:text-primary-600 transition-colors" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-textDark mb-2 sm:mb-3">
+                <h3 className="text-xl sm:text-2xl font-bold text-textDark mb-3 sm:mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-sm sm:text-base text-textLight leading-relaxed">
+                <p className="text-base sm:text-lg text-textLight leading-relaxed">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -358,27 +375,29 @@ const Home = () => {
               <motion.div
                 key={i}
                 variants={fadeIn}
-                className="bg-white p-6 sm:p-8 rounded-2xl border border-border hover:border-primary-200 hover:shadow-xl transition-all duration-300"
+                className="bg-white p-8 sm:p-10 rounded-2xl border border-border hover:border-primary-300 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="flex items-center space-x-1 mb-4 sm:mb-6">
+                <div className="flex items-center space-x-1.5 mb-6 sm:mb-8">
                   {[...Array(testimonial.rating)].map((_, index) => (
                     <StarIcon
                       key={index}
-                      className="w-4 h-4 sm:w-5 sm:h-5 fill-accent text-accent"
+                      className="w-5 h-5 sm:w-6 sm:h-6 fill-accent text-accent"
                     />
                   ))}
                 </div>
-                <p className="text-sm sm:text-base text-textLight leading-relaxed mb-4 sm:mb-6">
+                <p className="text-base sm:text-lg text-textDark leading-relaxed mb-6 sm:mb-8 font-medium">
                   "{testimonial.text}"
                 </p>
-                <div className="flex items-center space-x-3 sm:space-x-4 pt-4 sm:pt-6 border-t border-border">
-                  <div className="text-3xl sm:text-4xl">{testimonial.avatar}</div>
+                <div className="flex items-center space-x-4 sm:space-x-5 pt-6 border-t border-border">
+                  <div className="text-4xl sm:text-5xl">{testimonial.avatar}</div>
                   <div>
-                    <div className="font-bold text-sm sm:text-base text-textDark">
+                    <div className="font-bold text-base sm:text-lg text-textDark mb-1">
                       {testimonial.name}
                     </div>
-                    <div className="text-xs sm:text-sm text-textLight">{testimonial.role}</div>
-                    <div className="text-xs text-primary font-semibold">{testimonial.company}</div>
+                    <div className="text-sm sm:text-base text-textLight mb-1">
+                      {testimonial.role}
+                    </div>
+                    <div className="text-sm text-primary font-bold">{testimonial.company}</div>
                   </div>
                 </div>
               </motion.div>
@@ -399,23 +418,25 @@ const Home = () => {
           >
             <motion.h2
               variants={fadeIn}
-              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-textDark mb-4 sm:mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-textDark mb-6 sm:mb-8"
             >
               Ready to scale?
             </motion.h2>
             <motion.p
               variants={fadeIn}
-              className="text-base sm:text-lg lg:text-xl text-textLight mb-8 sm:mb-12 max-w-2xl mx-auto"
+              className="text-lg sm:text-xl lg:text-2xl text-textLight mb-10 sm:mb-14 max-w-2xl mx-auto leading-relaxed"
             >
               Join thousands of merchants growing their business on WhatsApp.
             </motion.p>
-            <motion.button
-              variants={fadeIn}
-              className="group px-8 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-base sm:text-lg font-semibold hover:shadow-xl hover:shadow-primary/30 transition-all flex items-center space-x-2 mx-auto"
-            >
-              <span>Start Free Trial</span>
-              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            <motion.div variants={fadeIn}>
+              <Link
+                to="/signup"
+                className="group px-10 sm:px-12 py-5 sm:py-6 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl text-lg sm:text-xl font-bold hover:shadow-2xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300 flex items-center space-x-3 mx-auto"
+              >
+                <span>Start Free Trial</span>
+                <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
