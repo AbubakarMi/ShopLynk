@@ -166,28 +166,30 @@ const HomeScreen = ({ navigation }: any) => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          {[
-            { value: '50K+', label: 'Active Merchants' },
-            { value: '5M+', label: 'Orders Processed' },
-            { value: '$2B+', label: 'Revenue Generated' },
-            { value: '150+', label: 'Countries' },
-          ].map((stat, i) => (
-            <Animated.View
-              key={i}
-              entering={FadeInUp.duration(600).delay(800 + i * 50)}
-              style={styles.statCard}
-            >
-              <LinearGradient
-                colors={[COLORS.primary, COLORS.accent]}
-                style={styles.statValueGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+          <View style={styles.statsGrid}>
+            {[
+              { value: '50K+', label: 'Active Merchants' },
+              { value: '5M+', label: 'Orders Processed' },
+              { value: '$2B+', label: 'Revenue Generated' },
+              { value: '150+', label: 'Countries' },
+            ].map((stat, i) => (
+              <Animated.View
+                key={i}
+                entering={FadeInUp.duration(600).delay(800 + i * 50)}
+                style={styles.statCard}
               >
-                <Text style={styles.statValue}>{stat.value}</Text>
-              </LinearGradient>
-              <Text style={styles.statLabel}>{stat.label}</Text>
-            </Animated.View>
-          ))}
+                <LinearGradient
+                  colors={[COLORS.primary, COLORS.accent]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.statValueContainer}
+                >
+                  <Text style={styles.statValue}>{stat.value}</Text>
+                </LinearGradient>
+                <Text style={styles.statLabel}>{stat.label}</Text>
+              </Animated.View>
+            ))}
+          </View>
         </LinearGradient>
 
         {/* Features */}
@@ -310,6 +312,129 @@ const HomeScreen = ({ navigation }: any) => {
             </Animated.View>
           ))}
         </LinearGradient>
+
+        {/* Pricing */}
+        <View style={styles.pricing}>
+          <Animated.View entering={FadeInUp.duration(600).delay(200)}>
+            <Text style={styles.sectionLabel}>PRICING</Text>
+            <Text style={styles.sectionTitle}>Simple, transparent pricing</Text>
+            <Text style={styles.sectionSubtitle}>
+              Choose the perfect plan for your business. All plans include a 14-day free trial.
+            </Text>
+          </Animated.View>
+
+          {[
+            {
+              name: 'Starter',
+              price: '$29',
+              period: '/month',
+              description: 'Perfect for small businesses getting started',
+              features: [
+                'Up to 1,000 orders/month',
+                'Basic analytics',
+                'WhatsApp integration',
+                'Standard support',
+                'Single store',
+                'Basic automation',
+              ],
+              cta: 'Start Free Trial',
+              popular: false,
+            },
+            {
+              name: 'Professional',
+              price: '$79',
+              period: '/month',
+              description: 'For growing businesses that need more power',
+              features: [
+                'Up to 10,000 orders/month',
+                'Advanced analytics',
+                'WhatsApp + SMS',
+                'Priority support',
+                'Up to 5 stores',
+                'Advanced automation',
+                'Custom branding',
+                'API access',
+              ],
+              cta: 'Start Free Trial',
+              popular: true,
+            },
+            {
+              name: 'Enterprise',
+              price: 'Custom',
+              period: '',
+              description: 'Tailored solutions for large organizations',
+              features: [
+                'Unlimited orders',
+                'Custom analytics',
+                'Multi-channel integration',
+                'Dedicated support',
+                'Unlimited stores',
+                'Custom automation',
+                'White-label solution',
+                'Custom integrations',
+              ],
+              cta: 'Contact Sales',
+              popular: false,
+            },
+          ].map((plan, i) => (
+            <Animated.View
+              key={i}
+              entering={FadeInUp.duration(600).delay(400 + i * 150)}
+              style={[styles.pricingCard, plan.popular && styles.pricingCardPopular]}
+            >
+              {plan.popular && (
+                <LinearGradient
+                  colors={[COLORS.primary, COLORS.accent]}
+                  style={styles.popularBadge}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={styles.popularBadgeText}>MOST POPULAR</Text>
+                </LinearGradient>
+              )}
+              <Text style={styles.pricingName}>{plan.name}</Text>
+              <Text style={styles.pricingDescription}>{plan.description}</Text>
+              <View style={styles.pricingPriceContainer}>
+                <Text style={styles.pricingPrice}>{plan.price}</Text>
+                {plan.period && <Text style={styles.pricingPeriod}>{plan.period}</Text>}
+              </View>
+              <View style={styles.pricingFeatures}>
+                {plan.features.map((feature, j) => (
+                  <View key={j} style={styles.pricingFeature}>
+                    <Text style={styles.pricingFeatureCheck}>✓</Text>
+                    <Text style={styles.pricingFeatureText}>{feature}</Text>
+                  </View>
+                ))}
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('SignUp')}
+              >
+                {plan.popular ? (
+                  <LinearGradient
+                    colors={[COLORS.primary, COLORS.primary600]}
+                    style={styles.pricingButton}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                  >
+                    <Text style={styles.pricingButtonTextPrimary}>{plan.cta}</Text>
+                  </LinearGradient>
+                ) : (
+                  <View style={styles.pricingButtonSecondary}>
+                    <Text style={styles.pricingButtonTextSecondary}>{plan.cta}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            </Animated.View>
+          ))}
+
+          <Animated.View entering={FadeInUp.duration(600).delay(850)} style={styles.pricingNote}>
+            <Text style={styles.pricingNoteText}>
+              All plans include a 14-day free trial. No credit card required.{' '}
+              <Text style={styles.pricingNoteLink}>View detailed comparison</Text>
+            </Text>
+          </Animated.View>
+        </View>
 
         {/* CTA */}
         <Animated.View entering={FadeInUp.duration(600).delay(600)}>
@@ -552,15 +677,26 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLORS.border,
+  },
+  statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 32,
+    gap: 40,
   },
-  statCard: { width: '47%', alignItems: 'center', paddingVertical: 16 },
-  statValueGradient: { marginBottom: 12 },
+  statCard: {
+    width: '45%',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  statValueContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
   statValue: {
-    fontSize: 44,
+    fontSize: 48,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.white,
     textAlign: 'center',
@@ -681,6 +817,164 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   testimonialCompany: { fontSize: 14, fontFamily: 'Inter_800ExtraBold', color: COLORS.primary },
+
+  pricing: { paddingHorizontal: 24, paddingVertical: 64, backgroundColor: COLORS.white },
+  pricingCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 24,
+    padding: 32,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    marginBottom: 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
+      },
+      android: { elevation: 6 },
+    }),
+  },
+  pricingCardPopular: {
+    borderColor: COLORS.primary,
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.3,
+        shadowRadius: 24,
+      },
+      android: { elevation: 12 },
+    }),
+  },
+  popularBadge: {
+    position: 'absolute',
+    top: -14,
+    left: '50%',
+    transform: [{ translateX: -70 }],
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: { elevation: 8 },
+    }),
+  },
+  popularBadgeText: {
+    fontSize: 11,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.white,
+    letterSpacing: 1,
+  },
+  pricingName: {
+    fontSize: 24,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.textDark,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  pricingDescription: {
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  pricingPriceContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
+  pricingPrice: {
+    fontSize: 52,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.textDark,
+  },
+  pricingPeriod: {
+    fontSize: 18,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+    marginBottom: 8,
+    marginLeft: 6,
+  },
+  pricingFeatures: {
+    marginBottom: 32,
+  },
+  pricingFeature: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  pricingFeatureCheck: {
+    fontSize: 18,
+    color: COLORS.accent,
+    marginRight: 12,
+    marginTop: 2,
+  },
+  pricingFeatureText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+    lineHeight: 22,
+  },
+  pricingButton: {
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+      },
+      android: { elevation: 8 },
+    }),
+  },
+  pricingButtonSecondary: {
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.white,
+  },
+  pricingButtonTextPrimary: {
+    fontSize: 17,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.white,
+  },
+  pricingButtonTextSecondary: {
+    fontSize: 17,
+    fontFamily: 'Inter_800ExtraBold',
+    color: COLORS.textDark,
+  },
+  pricingNote: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+  },
+  pricingNoteText: {
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  pricingNoteLink: {
+    color: COLORS.primary,
+    fontFamily: 'Inter_800ExtraBold',
+  },
 
   cta: {
     marginHorizontal: 24,

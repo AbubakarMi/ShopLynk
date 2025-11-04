@@ -406,6 +406,167 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section
+        id="pricing"
+        className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 bg-white"
+      >
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="text-center mb-12 sm:mb-16 lg:mb-20"
+          >
+            <motion.span
+              variants={fadeIn}
+              className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-4"
+            >
+              PRICING
+            </motion.span>
+            <motion.h2
+              variants={fadeIn}
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-textDark mb-4 sm:mb-6"
+            >
+              Simple, transparent pricing
+            </motion.h2>
+            <motion.p
+              variants={fadeIn}
+              className="text-base sm:text-lg text-textLight max-w-2xl mx-auto"
+            >
+              Choose the perfect plan for your business. All plans include a 14-day free trial.
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="grid md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto"
+          >
+            {[
+              {
+                name: 'Starter',
+                price: '$29',
+                period: '/month',
+                description: 'Perfect for small businesses getting started',
+                features: [
+                  'Up to 1,000 orders/month',
+                  'Basic analytics',
+                  'WhatsApp integration',
+                  'Standard support',
+                  'Single store',
+                  'Basic automation',
+                ],
+                cta: 'Start Free Trial',
+                popular: false,
+              },
+              {
+                name: 'Professional',
+                price: '$79',
+                period: '/month',
+                description: 'For growing businesses that need more power',
+                features: [
+                  'Up to 10,000 orders/month',
+                  'Advanced analytics',
+                  'WhatsApp + SMS',
+                  'Priority support',
+                  'Up to 5 stores',
+                  'Advanced automation',
+                  'Custom branding',
+                  'API access',
+                ],
+                cta: 'Start Free Trial',
+                popular: true,
+              },
+              {
+                name: 'Enterprise',
+                price: 'Custom',
+                period: '',
+                description: 'Tailored solutions for large organizations',
+                features: [
+                  'Unlimited orders',
+                  'Custom analytics',
+                  'Multi-channel integration',
+                  'Dedicated support',
+                  'Unlimited stores',
+                  'Custom automation',
+                  'White-label solution',
+                  'Custom integrations',
+                  '99.99% SLA',
+                ],
+                cta: 'Contact Sales',
+                popular: false,
+              },
+            ].map((plan, i) => (
+              <motion.div
+                key={i}
+                variants={fadeIn}
+                className={`relative bg-white p-8 sm:p-10 rounded-2xl border-2 ${
+                  plan.popular
+                    ? 'border-primary shadow-2xl scale-105'
+                    : 'border-border hover:border-primary-300'
+                } hover:shadow-2xl transition-all duration-300`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-primary to-accent text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                      MOST POPULAR
+                    </span>
+                  </div>
+                )}
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-textDark mb-2">{plan.name}</h3>
+                  <p className="text-sm text-textLight mb-6">{plan.description}</p>
+                  <div className="flex items-end justify-center mb-2">
+                    <span className="text-5xl font-extrabold text-textDark">{plan.price}</span>
+                    {plan.period && (
+                      <span className="text-lg text-textLight ml-2 mb-2">{plan.period}</span>
+                    )}
+                  </div>
+                </div>
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature, j) => (
+                    <li key={j} className="flex items-start space-x-3">
+                      <CheckIcon className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-textLight">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/signup"
+                  className={`w-full block text-center px-6 py-4 rounded-xl font-bold transition-all duration-300 ${
+                    plan.popular
+                      ? 'bg-gradient-to-r from-primary to-primary-600 text-white hover:shadow-xl hover:shadow-primary/50 hover:scale-105'
+                      : 'border-2 border-border text-textDark hover:border-primary hover:bg-primary-50'
+                  }`}
+                >
+                  {plan.cta}
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Pricing Note */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="text-center mt-12 sm:mt-16"
+          >
+            <p className="text-sm sm:text-base text-textLight">
+              All plans include a 14-day free trial. No credit card required.{' '}
+              <a href="#" className="text-primary font-bold hover:underline">
+                View detailed comparison
+              </a>
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-white opacity-50 pointer-events-none" />

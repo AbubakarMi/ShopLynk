@@ -9,6 +9,7 @@ import {
   StatusBar,
   Platform,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -25,6 +26,7 @@ const COLORS = {
   primary: '#3B5BDB',
   primary600: '#3046C5',
   accent: '#00C896',
+  accent50: '#ECFDF8',
   accent500: '#00C896',
   accent600: '#00A77D',
   white: '#FFFFFF',
@@ -32,6 +34,7 @@ const COLORS = {
   textDark: '#1A1A1A',
   textLight: '#6B7280',
   border: '#E5E7EB',
+  success: '#22C55E',
 };
 
 const SignUpScreen = ({ navigation }: any) => {
@@ -48,18 +51,19 @@ const SignUpScreen = ({ navigation }: any) => {
     email: '',
     phone: '',
     password: '',
+    agreeToTerms: false,
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!fontsLoaded) return null;
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Sign up:', formData);
-    // Handle sign up logic
-  };
-
-  const handleWhatsAppConnect = () => {
-    console.log('Connect WhatsApp');
-    // Trigger WhatsApp Cloud API OAuth flow
+    setIsLoading(false);
   };
 
   return (
@@ -89,8 +93,17 @@ const SignUpScreen = ({ navigation }: any) => {
 
           {/* Header */}
           <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.header}>
+            <LinearGradient
+              colors={[COLORS.accent50, COLORS.primary + '10']}
+              style={styles.trialBadge}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text style={styles.trialIcon}>✨</Text>
+              <Text style={styles.trialText}>14-Day Free Trial • No Credit Card</Text>
+            </LinearGradient>
             <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Create your WhatsApp Store in 2 minutes.</Text>
+            <Text style={styles.subtitle}>Launch your WhatsApp store in minutes</Text>
           </Animated.View>
 
           {/* Form */}
@@ -98,7 +111,7 @@ const SignUpScreen = ({ navigation }: any) => {
             {/* Full Name */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Full Name</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, formData.fullName && styles.inputContainerFocused]}>
                 <Text style={styles.inputIcon}>👤</Text>
                 <TextInput
                   style={styles.input}
@@ -113,11 +126,11 @@ const SignUpScreen = ({ navigation }: any) => {
             {/* Business Name */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Business Name</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, formData.businessName && styles.inputContainerFocused]}>
                 <Text style={styles.inputIcon}>🏪</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="My Store"
+                  placeholder="My Awesome Store"
                   placeholderTextColor={COLORS.textLight}
                   value={formData.businessName}
                   onChangeText={(text) => setFormData({ ...formData, businessName: text })}
@@ -128,7 +141,7 @@ const SignUpScreen = ({ navigation }: any) => {
             {/* Email */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, formData.email && styles.inputContainerFocused]}>
                 <Text style={styles.inputIcon}>📧</Text>
                 <TextInput
                   style={styles.input}
@@ -145,7 +158,7 @@ const SignUpScreen = ({ navigation }: any) => {
             {/* Phone Number */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Phone Number</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, formData.phone && styles.inputContainerFocused]}>
                 <Text style={styles.inputIcon}>📱</Text>
                 <TextInput
                   style={styles.input}
@@ -161,41 +174,50 @@ const SignUpScreen = ({ navigation }: any) => {
             {/* Password */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, formData.password && styles.inputContainerFocused]}>
                 <Text style={styles.inputIcon}>🔒</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="••••••••"
                   placeholderTextColor={COLORS.textLight}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   value={formData.password}
                   onChangeText={(text) => setFormData({ ...formData, password: text })}
                 />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <Text style={styles.eyeIconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                </TouchableOpacity>
               </View>
+              <Text style={styles.passwordHint}>Must be at least 8 characters with uppercase, lowercase, and numbers</Text>
             </View>
 
-            {/* Connect WhatsApp Button */}
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleWhatsAppConnect}
-              style={styles.whatsappButtonContainer}
-            >
-              <LinearGradient
-                colors={[COLORS.accent500, COLORS.accent600]}
-                style={styles.whatsappButton}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+            {/* Terms & Conditions Checkbox */}
+            <View style={styles.termsRow}>
+              <TouchableOpacity
+                style={styles.termsContainer}
+                onPress={() => setFormData({ ...formData, agreeToTerms: !formData.agreeToTerms })}
               >
-                <Text style={styles.whatsappIcon}>✓</Text>
-                <Text style={styles.whatsappButtonText}>Connect WhatsApp</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+                <View style={[styles.checkbox, formData.agreeToTerms && styles.checkboxChecked]}>
+                  {formData.agreeToTerms && <Text style={styles.checkmark}>✓</Text>}
+                </View>
+                <Text style={styles.termsTextMain}>
+                  I agree to the{' '}
+                  <Text style={styles.termsLink}>Terms of Service</Text>
+                  {' '}and{' '}
+                  <Text style={styles.termsLink}>Privacy Policy</Text>
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             {/* Create Account Button */}
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={handleSignUp}
-              style={styles.signUpButtonContainer}
+              disabled={isLoading || !formData.agreeToTerms}
+              style={[styles.signUpButtonContainer, (isLoading || !formData.agreeToTerms) && styles.buttonDisabled]}
             >
               <LinearGradient
                 colors={[COLORS.primary, COLORS.primary600]}
@@ -203,9 +225,35 @@ const SignUpScreen = ({ navigation }: any) => {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               >
-                <Text style={styles.signUpButtonText}>Create Account</Text>
+                {isLoading ? (
+                  <ActivityIndicator color={COLORS.white} size="small" />
+                ) : (
+                  <>
+                    <Text style={styles.sparkleIcon}>✨</Text>
+                    <Text style={styles.signUpButtonText}>Create Account</Text>
+                  </>
+                )}
               </LinearGradient>
             </TouchableOpacity>
+
+            {/* Divider */}
+            <View style={styles.dividerContainer}>
+              <View style={styles.divider} />
+              <Text style={styles.dividerText}>Or sign up with</Text>
+              <View style={styles.divider} />
+            </View>
+
+            {/* Social Signup Buttons */}
+            <View style={styles.socialContainer}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialIcon}>G</Text>
+                <Text style={styles.socialText}>Google</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialIcon}>🍎</Text>
+                <Text style={styles.socialText}>Apple</Text>
+              </TouchableOpacity>
+            </View>
           </Animated.View>
 
           {/* Footer */}
@@ -219,12 +267,18 @@ const SignUpScreen = ({ navigation }: any) => {
                 Sign In
               </Text>
             </Text>
+          </Animated.View>
 
-            <Text style={styles.termsText}>
-              By creating an account, you agree to our{' '}
-              <Text style={styles.link}>Terms of Service</Text> and{' '}
-              <Text style={styles.link}>Privacy Policy</Text>
-            </Text>
+          {/* Trust Badges */}
+          <Animated.View entering={FadeInUp.duration(600).delay(400)} style={styles.trustBadges}>
+            <View style={styles.trustBadge}>
+              <Text style={styles.trustIcon}>✅</Text>
+              <Text style={styles.trustText}>Free 14-Day Trial</Text>
+            </View>
+            <View style={styles.trustBadge}>
+              <Text style={styles.trustIcon}>✅</Text>
+              <Text style={styles.trustText}>No Credit Card Required</Text>
+            </View>
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -245,28 +299,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 40,
+    marginBottom: 32,
   },
   logoIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.4,
+        shadowRadius: 16,
       },
-      android: { elevation: 4 },
+      android: { elevation: 10 },
     }),
   },
-  logoIconText: { fontSize: 24 },
+  logoIconText: { fontSize: 28 },
   logoText: {
-    fontSize: 28,
+    fontSize: 32,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
   },
@@ -274,8 +328,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
+  trialBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    marginBottom: 20,
+  },
+  trialIcon: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+  trialText: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.accent,
+  },
   title: {
-    fontSize: 36,
+    fontSize: 48,
     fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
     marginBottom: 12,
@@ -288,25 +359,47 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   form: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   inputGroup: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Inter_800ExtraBold',
+    fontFamily: 'Inter_700Bold',
     color: COLORS.textDark,
     marginBottom: 8,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: COLORS.border,
     borderRadius: 12,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white + 'CC',
     paddingHorizontal: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+      },
+      android: { elevation: 2 },
+    }),
+  },
+  inputContainerFocused: {
+    borderColor: COLORS.primary,
+    backgroundColor: COLORS.white,
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+      },
+      android: { elevation: 4 },
+    }),
   },
   inputIcon: {
     fontSize: 20,
@@ -319,11 +412,60 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textDark,
   },
-  whatsappButtonContainer: {
-    marginTop: 8,
-    marginBottom: 16,
+  eyeIcon: {
+    padding: 8,
   },
-  whatsappButton: {
+  eyeIconText: {
+    fontSize: 20,
+  },
+  passwordHint: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    color: COLORS.textLight,
+    marginTop: 8,
+  },
+  termsRow: {
+    marginBottom: 20,
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    borderRadius: 6,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  checkboxChecked: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  checkmark: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontFamily: 'Inter_800ExtraBold',
+  },
+  termsTextMain: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+    color: COLORS.textLight,
+    lineHeight: 20,
+  },
+  termsLink: {
+    color: COLORS.primary,
+    fontFamily: 'Inter_700Bold',
+  },
+  signUpButtonContainer: {
+    marginBottom: 20,
+  },
+  signUpButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -331,70 +473,100 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     ...Platform.select({
       ios: {
-        shadowColor: COLORS.accent,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.3,
-        shadowRadius: 12,
-      },
-      android: { elevation: 6 },
-    }),
-  },
-  whatsappIcon: {
-    fontSize: 24,
-    color: COLORS.white,
-    marginRight: 10,
-  },
-  whatsappButtonText: {
-    fontSize: 18,
-    fontFamily: 'Inter_800ExtraBold',
-    color: COLORS.white,
-  },
-  signUpButtonContainer: {
-    marginTop: 0,
-  },
-  signUpButton: {
-    paddingVertical: 18,
-    borderRadius: 12,
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
         shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.4,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.5,
+        shadowRadius: 20,
       },
-      android: { elevation: 8 },
+      android: { elevation: 12 },
     }),
   },
   signUpButtonText: {
     fontSize: 18,
-    fontFamily: 'Inter_800ExtraBold',
+    fontFamily: 'Inter_700Bold',
     color: COLORS.white,
   },
-  footer: {
-    marginTop: 24,
-    alignItems: 'center',
+  sparkleIcon: {
+    fontSize: 24,
+    marginRight: 8,
   },
-  footerText: {
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.border,
+  },
+  dividerText: {
+    marginHorizontal: 16,
     fontSize: 14,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
-    marginBottom: 20,
   },
-  signInLink: {
-    color: COLORS.primary,
+  socialContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 32,
+  },
+  socialButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    borderRadius: 12,
+    backgroundColor: COLORS.white,
+  },
+  socialIcon: {
+    fontSize: 20,
+    marginRight: 8,
     fontFamily: 'Inter_800ExtraBold',
   },
-  termsText: {
-    fontSize: 12,
+  socialText: {
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textDark,
+  },
+  footer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  footerText: {
+    fontSize: 16,
     fontFamily: 'Inter_400Regular',
     color: COLORS.textLight,
     textAlign: 'center',
-    lineHeight: 18,
   },
-  link: {
+  signInLink: {
     color: COLORS.primary,
-    textDecorationLine: 'underline',
+    fontFamily: 'Inter_700Bold',
+  },
+  trustBadges: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 24,
+    paddingTop: 8,
+  },
+  trustBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  trustIcon: {
+    fontSize: 14,
+    marginRight: 6,
+  },
+  trustText: {
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
   },
 });
 
