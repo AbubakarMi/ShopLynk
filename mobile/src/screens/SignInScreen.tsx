@@ -32,6 +32,7 @@ import {
   AppleIcon,
   SuccessCheckIcon,
 } from '../components/Icons';
+import GradientText from '../components/GradientText';
 
 const COLORS = {
   primary: '#3B5BDB',
@@ -93,7 +94,12 @@ const SignInScreen = ({ navigation }: any) => {
             >
               <ShoppingBagIcon size={32} color="#FFFFFF" />
             </LinearGradient>
-            <Text style={styles.logoText}>ShopLynk</Text>
+            <GradientText
+              colors={[COLORS.primary, COLORS.accent, COLORS.accent]}
+              style={styles.logoText}
+            >
+              ShopLynk
+            </GradientText>
           </Animated.View>
 
           {/* Card Container */}
@@ -109,7 +115,7 @@ const SignInScreen = ({ navigation }: any) => {
               {/* Email / Phone */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email or Phone</Text>
-                <View style={[styles.inputContainer, formData.email && styles.inputFocused]}>
+                <View style={[styles.inputContainer, formData.email ? styles.inputFocused : null]}>
                   <EnvelopeIcon size={20} color={formData.email ? COLORS.primary : COLORS.textLight} />
                   <TextInput
                     style={styles.input}
@@ -126,7 +132,7 @@ const SignInScreen = ({ navigation }: any) => {
               {/* Password */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
-                <View style={[styles.inputContainer, formData.password && styles.inputFocused]}>
+                <View style={[styles.inputContainer, formData.password ? styles.inputFocused : null]}>
                   <LockClosedIcon size={20} color={formData.password ? COLORS.primary : COLORS.textLight} />
                   <TextInput
                     style={styles.input}

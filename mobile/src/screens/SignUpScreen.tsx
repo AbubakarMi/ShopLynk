@@ -35,6 +35,7 @@ import {
   AppleIcon,
   SuccessCheckIcon,
 } from '../components/Icons';
+import GradientText from '../components/GradientText';
 
 const COLORS = {
   primary: '#3B5BDB',
@@ -100,7 +101,12 @@ const SignUpScreen = ({ navigation }: any) => {
             >
               <ShoppingBagIcon size={32} color="#FFFFFF" />
             </LinearGradient>
-            <Text style={styles.logoText}>ShopLynk</Text>
+            <GradientText
+              colors={[COLORS.primary, COLORS.accent, COLORS.accent]}
+              style={styles.logoText}
+            >
+              ShopLynk
+            </GradientText>
           </Animated.View>
 
           {/* Card Container */}
@@ -126,7 +132,7 @@ const SignUpScreen = ({ navigation }: any) => {
               <View style={styles.row}>
                 <View style={styles.halfInput}>
                   <Text style={styles.label}>Full Name</Text>
-                  <View style={[styles.inputContainer, formData.fullName && styles.inputFocused]}>
+                  <View style={[styles.inputContainer, formData.fullName ? styles.inputFocused : null]}>
                     <UserIcon size={20} color={formData.fullName ? COLORS.primary : COLORS.textLight} />
                     <TextInput
                       style={styles.input}
@@ -140,7 +146,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
                 <View style={styles.halfInput}>
                   <Text style={styles.label}>Business Name</Text>
-                  <View style={[styles.inputContainer, formData.businessName && styles.inputFocused]}>
+                  <View style={[styles.inputContainer, formData.businessName ? styles.inputFocused : null]}>
                     <BuildingStorefrontIcon size={20} color={formData.businessName ? COLORS.primary : COLORS.textLight} />
                     <TextInput
                       style={styles.input}
@@ -157,7 +163,7 @@ const SignUpScreen = ({ navigation }: any) => {
               <View style={styles.row}>
                 <View style={styles.halfInput}>
                   <Text style={styles.label}>Email</Text>
-                  <View style={[styles.inputContainer, formData.email && styles.inputFocused]}>
+                  <View style={[styles.inputContainer, formData.email ? styles.inputFocused : null]}>
                     <EnvelopeIcon size={20} color={formData.email ? COLORS.primary : COLORS.textLight} />
                     <TextInput
                       style={styles.input}
@@ -173,7 +179,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
                 <View style={styles.halfInput}>
                   <Text style={styles.label}>Phone Number</Text>
-                  <View style={[styles.inputContainer, formData.phone && styles.inputFocused]}>
+                  <View style={[styles.inputContainer, formData.phone ? styles.inputFocused : null]}>
                     <PhoneIcon size={20} color={formData.phone ? COLORS.primary : COLORS.textLight} />
                     <TextInput
                       style={styles.input}
@@ -190,7 +196,7 @@ const SignUpScreen = ({ navigation }: any) => {
               {/* Password */}
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
-                <View style={[styles.inputContainer, formData.password && styles.inputFocused]}>
+                <View style={[styles.inputContainer, formData.password ? styles.inputFocused : null]}>
                   <LockClosedIcon size={20} color={formData.password ? COLORS.primary : COLORS.textLight} />
                   <TextInput
                     style={styles.input}
