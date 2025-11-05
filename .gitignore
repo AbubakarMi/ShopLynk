@@ -71,3 +71,6 @@ temp/
 *.swp
 *.swo
 *~
+
+# Claude AI
+.claude/settings.local.json

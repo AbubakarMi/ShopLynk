@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import Onboarding from './pages/Onboarding';
 import PortalLayout from './layouts/PortalLayout';
 import Dashboard from './pages/portal/Dashboard';
 import Products from './pages/portal/Products';
@@ -20,6 +21,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/onboarding" element={<Onboarding />} />
 
       {/* Portal Routes */}
       <Route path="/portal" element={<PortalLayout />}>

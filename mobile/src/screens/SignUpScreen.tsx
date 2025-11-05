@@ -77,6 +77,8 @@ const SignUpScreen = ({ navigation }: any) => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Sign up:', formData);
     setIsLoading(false);
+    // Navigate to onboarding after successful registration
+    navigation.replace('Onboarding');
   };
 
   return (

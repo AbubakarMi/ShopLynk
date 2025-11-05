@@ -14,6 +14,7 @@ import {
   Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ShoppingBagIcon } from '../components/Icons';
 import GradientText from '../components/GradientText';
 
@@ -71,9 +72,26 @@ const SplashScreen = ({ navigation }: any) => {
         ])
       ).start();
 
-      // Navigate to SignIn after 2.5 seconds
-      const timer = setTimeout(() => {
-        navigation.replace('SignIn');
+      // Check auth and onboarding status after 2.5 seconds
+      const timer = setTimeout(async () => {
+        try {
+          const token = await AsyncStorage.getItem('authToken');
+          const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+
+          if (!token) {
+            // Not logged in - go to sign in
+            navigation.replace('SignIn');
+          } else if (!hasSeenOnboarding) {
+            // Logged in but hasn't seen onboarding
+            navigation.replace('Onboarding');
+          } else {
+            // Logged in and has seen onboarding
+            navigation.replace('Portal');
+          }
+        } catch (error) {
+          console.error('Error checking auth/onboarding status:', error);
+          navigation.replace('SignIn');
+        }
       }, 2500);
 
       return () => clearTimeout(timer);

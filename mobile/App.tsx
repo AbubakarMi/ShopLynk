@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './src/screens/SplashScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import SignInScreen from './src/screens/SignInScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
 import PortalTabNavigator from './src/navigation/PortalTabNavigator';
 import WhatsAppScreen from './src/screens/portal/WhatsAppScreen';
 import InvoicesScreen from './src/screens/portal/InvoicesScreen';
@@ -29,6 +30,7 @@ export default function App() {
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
 
           {/* Portal Screens */}
           <Stack.Screen name="Portal" component={PortalTabNavigator} />

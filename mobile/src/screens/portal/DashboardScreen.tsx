@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useFonts,
   Inter_400Regular,
@@ -113,6 +114,18 @@ const DashboardScreen = ({ navigation }: any) => {
             Welcome back! Here's what's happening with your store today.
           </Text>
         </View>
+
+        {/* Test Onboarding Button */}
+        <TouchableOpacity
+          style={styles.testButton}
+          onPress={async () => {
+            await AsyncStorage.removeItem('hasSeenOnboarding');
+            navigation.navigate('Onboarding');
+          }}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.testButtonText}>🎯 Test Onboarding</Text>
+        </TouchableOpacity>
 
         {/* Store Status Banner */}
         <LinearGradient
@@ -653,6 +666,30 @@ const styles = StyleSheet.create({
   orderStatusText: {
     fontSize: isSmallScreen ? 10 : 11,
     fontFamily: 'Inter_600SemiBold',
+  },
+  testButton: {
+    backgroundColor: '#3B5BDB',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginBottom: 20,
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#3B5BDB',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  testButtonText: {
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    color: '#FFFFFF',
   },
 });
 

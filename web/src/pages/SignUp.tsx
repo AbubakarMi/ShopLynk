@@ -12,9 +12,10 @@ import {
   EyeSlashIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     businessName: '',
@@ -44,6 +45,8 @@ const SignUp = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Sign up:', formData);
     setIsLoading(false);
+    // Navigate to onboarding after successful registration
+    navigate('/onboarding');
   };
 
   const handleWhatsAppConnect = () => {

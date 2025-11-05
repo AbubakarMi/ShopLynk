@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CubeIcon,
   ShoppingCartIcon,
@@ -13,6 +13,8 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   // Mock data - replace with actual API calls
   const stats = {
     totalProducts: 45,
@@ -47,6 +49,19 @@ export default function Dashboard() {
         <p className="mt-1 text-sm text-gray-600">
           Welcome back! Here's what's happening with your store today.
         </p>
+      </div>
+
+      {/* Test Onboarding Button */}
+      <div className="px-4 sm:px-0">
+        <button
+          onClick={() => {
+            localStorage.removeItem('shoplynk_hasSeenOnboarding');
+            navigate('/onboarding');
+          }}
+          className="px-6 py-3 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all"
+        >
+          🎯 Test Onboarding
+        </button>
       </div>
 
       {/* Store Status Banner */}
