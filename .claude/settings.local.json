@@ -26,7 +26,8 @@
       "Bash(if exist mobilepackage-lock.json del mobilepackage-lock.json)",
       "Bash(yarn add:*)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

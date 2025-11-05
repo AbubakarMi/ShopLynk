@@ -11,6 +11,7 @@ import {
   Switch,
   Alert,
 } from 'react-native';
+import Constants from 'expo-constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import {
@@ -274,7 +275,7 @@ const SettingsScreen = ({ navigation }: any) => {
         <View style={styles.apiKeyContainer}>
           <TextInput
             style={[styles.formInput, styles.apiKeyInput]}
-            value="your-stripe-secret-key"
+            value={Constants.expoConfig?.extra?.STRIPE_SECRET_KEY || 'Not configured'}
             secureTextEntry={!showApiKey}
             editable={false}
           />
@@ -296,7 +297,7 @@ const SettingsScreen = ({ navigation }: any) => {
         <View style={styles.apiKeyContainer}>
           <TextInput
             style={[styles.formInput, styles.apiKeyInput]}
-            value="your-stripe-webhook-secret"
+            value={Constants.expoConfig?.extra?.STRIPE_WEBHOOK_SECRET || 'Not configured'}
             secureTextEntry
             editable={false}
           />

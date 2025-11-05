@@ -304,7 +304,7 @@ export default function Settings() {
                     <div className="mt-1 flex space-x-2">
                       <input
                         type={showApiKey ? 'text' : 'password'}
-                        value="your-stripe-secret-key"
+                        value={import.meta.env.VITE_STRIPE_SECRET_KEY || 'Not configured'}
                         readOnly
                         className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 font-mono text-sm"
                       />
@@ -325,7 +325,7 @@ export default function Settings() {
                     <div className="mt-1 flex space-x-2">
                       <input
                         type="password"
-                        value="your-stripe-webhook-secret"
+                        value={import.meta.env.VITE_STRIPE_WEBHOOK_SECRET || 'Not configured'}
                         readOnly
                         className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 font-mono text-sm"
                       />
