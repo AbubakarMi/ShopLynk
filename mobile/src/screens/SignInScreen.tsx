@@ -240,6 +240,15 @@ const SignInScreen = ({ navigation }: any) => {
                 <Text style={styles.trustText}>256-bit Encryption</Text>
               </View>
             </View>
+
+            {/* Portal Text */}
+            <TouchableOpacity
+              style={styles.portalContainer}
+              onPress={() => navigation.navigate('Portal')}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.portalText}>Access Portal →</Text>
+            </TouchableOpacity>
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -502,6 +511,22 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
+  },
+  portalContainer: {
+    alignItems: 'center',
+    marginTop: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: 'rgba(59, 91, 219, 0.05)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 91, 219, 0.2)',
+  },
+  portalText: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.primary,
+    textAlign: 'center',
   },
 });
 

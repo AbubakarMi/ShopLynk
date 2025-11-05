@@ -14,7 +14,19 @@
       "Bash(Stop-Process -Force -ErrorAction SilentlyContinue)",
       "Bash(timeout /t 3 /nobreak)",
       "Bash(timeout /t 5 /nobreak)",
-      "Bash(npx tsc --noEmit)"
+      "Bash(npx tsc --noEmit)",
+      "Bash(npm run dev:*)",
+      "Bash(dir:*)",
+      "Bash(ping:*)",
+      "Bash(if exist package-lock.json del package-lock.json)",
+      "Bash(if exist node_modules rmdir /s /q node_modules)",
+      "Bash(npm cache clean:*)",
+      "Bash(yarn install)",
+      "Bash(if exist mobilenode_modules rmdir /s /q mobilenode_modules)",
+      "Bash(if exist mobilepackage-lock.json del mobilepackage-lock.json)",
+      "Bash(yarn add:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

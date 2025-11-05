@@ -8,6 +8,7 @@ import {
   Dimensions,
   StatusBar,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -68,7 +69,13 @@ const HomeScreen = ({ navigation }: any) => {
     Inter_800ExtraBold,
   });
 
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.white }}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -110,6 +117,28 @@ const HomeScreen = ({ navigation }: any) => {
               </LinearGradient>
             </TouchableOpacity>
           </Animated.View>
+        </View>
+
+        {/* TEMPORARY TEST BUTTON - For testing Portal */}
+        <View style={{ backgroundColor: '#FFF3CD', borderColor: '#FFC107', borderWidth: 2, margin: 16, borderRadius: 12, overflow: 'hidden' }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('Portal')}
+          >
+            <LinearGradient
+              colors={['#FFF3CD', '#FFE69C']}
+              style={{ padding: 20, alignItems: 'center' }}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: '700', color: '#856404', marginBottom: 4 }}>
+                🧪 TEST PORTAL (Temporary)
+              </Text>
+              <Text style={{ fontSize: 13, color: '#856404', opacity: 0.8 }}>
+                Tap to access Business Owner Portal
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
 
         {/* Hero Section */}
@@ -187,6 +216,23 @@ const HomeScreen = ({ navigation }: any) => {
                 <Text style={styles.trustText}>{item}</Text>
               </View>
             ))}
+          </Animated.View>
+
+          {/* TEMPORARY TEST BUTTON - For testing Portal */}
+          <Animated.View entering={FadeInUp.duration(600).delay(650)} style={{ marginTop: 20, marginBottom: 20 }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('Portal')}
+            >
+              <LinearGradient
+                colors={[COLORS.accent, '#00A876']}
+                style={styles.testPortalButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.testPortalButtonText}>🧪 TEST PORTAL (Temporary)</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </Animated.View>
 
           {/* Dashboard Preview with Floating Elements */}
@@ -780,6 +826,30 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   trustText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: COLORS.textLight, marginLeft: 6 },
+
+  // Test Portal Button (Temporary)
+  testPortalButton: {
+    paddingVertical: 18,
+    paddingHorizontal: 32,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.accent,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.35,
+        shadowRadius: 14,
+      },
+      android: { elevation: 8 },
+    }),
+  },
+  testPortalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.white,
+    letterSpacing: 0.5,
+  },
 
   // Mockup/Dashboard Preview
   mockupContainer: { width: width - 40 },

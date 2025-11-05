@@ -6,8 +6,7 @@
   "workspaces": [
     "web",
     "mobile",
-    "server",
-    "shared"
+    "server"
   ],
   "scripts": {
     "start:web": "npm run dev --workspace=web",
