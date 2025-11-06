@@ -8,9 +8,10 @@ import {
   EyeSlashIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -36,6 +37,8 @@ const SignIn = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Sign in:', formData);
     setIsLoading(false);
+    // Navigate to admin panel
+    navigate('/admin/dashboard');
   };
 
   return (
@@ -306,6 +309,16 @@ const SignIn = () => {
               </svg>
               <span className="font-semibold">256-bit Encryption</span>
             </div>
+          </motion.div>
+
+          {/* Admin Panel Access */}
+          <motion.div variants={fadeIn} className="mt-6 text-center">
+            <button
+              onClick={() => navigate('/admin/dashboard')}
+              className="text-sm font-semibold text-primary hover:text-primary-600 transition-colors"
+            >
+              🔐 Access Admin Panel →
+            </button>
           </motion.div>
         </motion.div>
       </motion.div>

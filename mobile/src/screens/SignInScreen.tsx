@@ -241,13 +241,13 @@ const SignInScreen = ({ navigation }: any) => {
               </View>
             </View>
 
-            {/* Portal Text */}
+            {/* Admin Panel Text */}
             <TouchableOpacity
               style={styles.portalContainer}
-              onPress={() => navigation.navigate('Portal')}
+              onPress={() => navigation.navigate('Admin')}
               activeOpacity={0.7}
             >
-              <Text style={styles.portalText}>Access Portal →</Text>
+              <Text style={styles.portalText}>Access Admin Panel →</Text>
             </TouchableOpacity>
           </Animated.View>
         </ScrollView>

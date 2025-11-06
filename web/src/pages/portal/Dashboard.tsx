@@ -51,8 +51,8 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Test Onboarding Button */}
-      <div className="px-4 sm:px-0">
+      {/* Test Buttons */}
+      <div className="px-4 sm:px-0 flex gap-3">
         <button
           onClick={() => {
             localStorage.removeItem('shoplynk_hasSeenOnboarding');
@@ -61,6 +61,14 @@ export default function Dashboard() {
           className="px-6 py-3 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all"
         >
           🎯 Test Onboarding
+        </button>
+        <button
+          onClick={() => {
+            navigate('/admin/dashboard');
+          }}
+          className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all"
+        >
+          🔐 Admin Panel
         </button>
       </div>
 

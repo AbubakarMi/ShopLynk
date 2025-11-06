@@ -8,6 +8,7 @@ import SignUpScreen from './src/screens/SignUpScreen';
 import SignInScreen from './src/screens/SignInScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import PortalTabNavigator from './src/navigation/PortalTabNavigator';
+import AdminTabNavigator from './src/navigation/AdminTabNavigator';
 import WhatsAppScreen from './src/screens/portal/WhatsAppScreen';
 import InvoicesScreen from './src/screens/portal/InvoicesScreen';
 import AnalyticsScreen from './src/screens/portal/AnalyticsScreen';
@@ -39,6 +40,9 @@ export default function App() {
           <Stack.Screen name="Analytics" component={AnalyticsScreen} />
           <Stack.Screen name="Customers" component={CustomersScreen} />
           <Stack.Screen name="Help" component={HelpScreen} />
+
+          {/* Admin Screens */}
+          <Stack.Screen name="Admin" component={AdminTabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

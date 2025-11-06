@@ -115,17 +115,29 @@ const DashboardScreen = ({ navigation }: any) => {
           </Text>
         </View>
 
-        {/* Test Onboarding Button */}
-        <TouchableOpacity
-          style={styles.testButton}
-          onPress={async () => {
-            await AsyncStorage.removeItem('hasSeenOnboarding');
-            navigation.navigate('Onboarding');
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.testButtonText}>🎯 Test Onboarding</Text>
-        </TouchableOpacity>
+        {/* Test Buttons */}
+        <View style={styles.testButtonsContainer}>
+          <TouchableOpacity
+            style={styles.testButton}
+            onPress={async () => {
+              await AsyncStorage.removeItem('hasSeenOnboarding');
+              navigation.navigate('Onboarding');
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.testButtonText}>🎯 Test Onboarding</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.testButton, { backgroundColor: '#8B5CF6' }]}
+            onPress={() => {
+              navigation.navigate('Admin');
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.testButtonText}>🔐 Admin Panel</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Store Status Banner */}
         <LinearGradient
@@ -667,12 +679,17 @@ const styles = StyleSheet.create({
     fontSize: isSmallScreen ? 10 : 11,
     fontFamily: 'Inter_600SemiBold',
   },
+  testButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 20,
+  },
   testButton: {
+    flex: 1,
     backgroundColor: '#3B5BDB',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 12,
-    marginBottom: 20,
     alignItems: 'center',
     ...Platform.select({
       ios: {

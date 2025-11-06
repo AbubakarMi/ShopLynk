@@ -99,6 +99,38 @@ shoplynk/
 └── package.json   # Root package.json with workspace config
 ```
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) folder:
+
+- **[Getting Started Guide](./docs/GETTING_STARTED.md)** - Setup and installation
+- **[Quick Start](./docs/QUICK_START.md)** - Quick reference for admin panel
+- **[Admin Panel Guide](./docs/IMPLEMENTATION_COMPLETE.md)** - Complete admin panel documentation
+- **[Project Structure](./docs/STRUCTURE.md)** - File organization and architecture
+- **[Environment Setup](./docs/ENV_SETUP.md)** - Environment variables configuration
+
+**📖 [View Full Documentation Index](./docs/INDEX.md)**
+
+## Quick Commands
+
+### Web Development
+```bash
+cd web
+npm run dev
+# Open: http://localhost:5173
+```
+
+### Mobile Development
+```bash
+cd mobile
+npx expo start
+# Press 'i' for iOS or 'a' for Android
+```
+
+### Admin Panel Access
+- **Web:** http://localhost:5173/admin/dashboard
+- **Mobile:** Tap hamburger menu (☰) after launching admin
+
 ## Contributing
 
 Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
