@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,15 +9,18 @@ import {
   Platform,
   Dimensions,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useFonts,
   Inter_400Regular,
   Inter_600SemiBold,
   Inter_700Bold,
+  Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import {
   CubeIcon,
@@ -30,12 +33,15 @@ import {
   ChartBarIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  XCircleIcon,
 } from '../../components/Icons';
 
 const { width } = Dimensions.get('window');
-const isSmallScreen = width < 375; // iPhone SE and smaller
-const isMediumScreen = width >= 375 && width < 414; // iPhone 13/14 Pro
-const isLargeScreen = width >= 414; // iPhone 13/14 Pro Max and larger
+const isSmallScreen = width < 375;
+const isMediumScreen = width >= 375 && width < 414;
+const isLargeScreen = width >= 414;
 
 const COLORS = {
   primary: '#3B5BDB',
@@ -45,7 +51,11 @@ const COLORS = {
   textDark: '#1A1A1A',
   textLight: '#6B7280',
   border: '#E5E7EB',
-  gray900: '#111827',
+  green: '#10B981',
+  red: '#EF4444',
+  yellow: '#F59E0B',
+  blue: '#3B82F6',
+  purple: '#9333EA',
 };
 
 const DashboardScreen = ({ navigation }: any) => {
@@ -53,38 +63,63 @@ const DashboardScreen = ({ navigation }: any) => {
     Inter_400Regular,
     Inter_600SemiBold,
     Inter_700Bold,
+    Inter_800ExtraBold,
   });
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    // Simulate initial load
+    setTimeout(() => setIsLoading(false), 800);
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1500);
+  }, []);
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surface }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
 
-  // Mock data - EXACT match from web version
+  // Enhanced mock data
   const stats = {
     totalProducts: 45,
+    productsChange: 12,
     ordersToday: 12,
+    ordersChange: 8,
     salesThisWeek: 24500,
+    salesChange: -3,
     pendingDeliveries: 8,
+    deliveriesUrgent: 2,
   };
 
   const recentOrders = [
-    { id: '#ORD-001', customer: 'John Doe', amount: 1250, status: 'Pending', time: '2 hours ago' },
-    { id: '#ORD-002', customer: 'Jane Smith', amount: 850, status: 'Completed', time: '5 hours ago' },
-    { id: '#ORD-003', customer: 'Mike Johnson', amount: 2100, status: 'Processing', time: '1 day ago' },
+    { id: '#ORD-001', customer: 'John Doe', amount: 1250, status: 'Pending', time: '2 hours ago', items: 3 },
+    { id: '#ORD-002', customer: 'Jane Smith', amount: 850, status: 'Completed', time: '5 hours ago', items: 2 },
+    { id: '#ORD-003', customer: 'Mike Johnson', amount: 2100, status: 'Processing', time: '1 day ago', items: 5 },
+    { id: '#ORD-004', customer: 'Sarah Williams', amount: 1650, status: 'Completed', time: '1 day ago', items: 4 },
   ];
 
   const salesData = [
-    { day: 'Mon', sales: 3200 },
-    { day: 'Tue', sales: 4100 },
-    { day: 'Wed', sales: 3800 },
-    { day: 'Thu', sales: 5200 },
-    { day: 'Fri', sales: 4800 },
-    { day: 'Sat', sales: 6100 },
-    { day: 'Sun', sales: 5500 },
+    { day: 'Mon', sales: 3200, orders: 8 },
+    { day: 'Tue', sales: 4100, orders: 12 },
+    { day: 'Wed', sales: 3800, orders: 10 },
+    { day: 'Thu', sales: 5200, orders: 15 },
+    { day: 'Fri', sales: 4800, orders: 13 },
+    { day: 'Sat', sales: 6100, orders: 18 },
+    { day: 'Sun', sales: 5500, orders: 16 },
+  ];
+
+  const topProducts = [
+    { name: 'Premium Headphones', sales: 1250, quantity: 45, trend: 12 },
+    { name: 'Wireless Mouse', sales: 980, quantity: 78, trend: 8 },
+    { name: 'USB-C Cable', sales: 750, quantity: 120, trend: -5 },
   ];
 
   const maxSales = Math.max(...salesData.map(d => d.sales));
@@ -97,251 +132,439 @@ const DashboardScreen = ({ navigation }: any) => {
         return { bg: '#FEF3C7', text: '#92400E' };
       case 'Processing':
         return { bg: '#DBEAFE', text: '#1E40AF' };
+      case 'Cancelled':
+        return { bg: '#FEE2E2', text: '#991B1B' };
       default:
         return { bg: '#F3F4F6', text: '#1F2937' };
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    const iconSize = 16;
+    switch (status) {
+      case 'Completed':
+        return <CheckCircleIcon size={iconSize} color={COLORS.green} />;
+      case 'Processing':
+        return <ClockIcon size={iconSize} color={COLORS.blue} />;
+      case 'Pending':
+        return <ClockIcon size={iconSize} color={COLORS.yellow} />;
+      case 'Cancelled':
+        return <XCircleIcon size={iconSize} color={COLORS.red} />;
+      default:
+        return null;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container} edges={[]}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.loadingText}>Loading your dashboard...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.surface} />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />
+        }
+      >
         {/* Page header */}
-        <View style={styles.pageHeader}>
+        <Animated.View entering={FadeInDown.duration(400)} style={styles.pageHeader}>
           <Text style={styles.pageTitle}>Dashboard</Text>
           <Text style={styles.pageSubtitle}>
             Welcome back! Here's what's happening with your store today.
           </Text>
-        </View>
+        </Animated.View>
 
         {/* Test Buttons */}
-        <View style={styles.testButtonsContainer}>
+        <Animated.View entering={FadeInDown.duration(400).delay(100)} style={styles.testButtonsContainer}>
           <TouchableOpacity
-            style={styles.testButton}
+            style={[styles.testButton, { backgroundColor: COLORS.primary }]}
             onPress={async () => {
               await AsyncStorage.removeItem('hasSeenOnboarding');
               navigation.navigate('Onboarding');
             }}
-            activeOpacity={0.7}
+            activeOpacity={0.8}
           >
             <Text style={styles.testButtonText}>🎯 Test Onboarding</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.testButton, { backgroundColor: '#8B5CF6' }]}
+            style={[styles.testButton, { backgroundColor: COLORS.purple }]}
             onPress={() => {
               navigation.navigate('Admin');
             }}
-            activeOpacity={0.7}
+            activeOpacity={0.8}
           >
             <Text style={styles.testButtonText}>🔐 Admin Panel</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
         {/* Store Status Banner */}
-        <LinearGradient
-          colors={[COLORS.primary, COLORS.accent]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.statusBanner}
-        >
-          <View style={styles.statusContent}>
-            <Text style={styles.statusTitle}>My Awesome Store</Text>
-            <Text style={styles.statusSubtitle}>Your store is active and ready to receive orders</Text>
-          </View>
-          <View style={styles.statusBadgesContainer}>
-            <View style={styles.statusBadge}>
-              <View style={styles.statusDot} />
-              <Text style={styles.statusBadgeText}>Store Active</Text>
+        <Animated.View entering={FadeInDown.duration(400).delay(200)}>
+          <LinearGradient
+            colors={[COLORS.primary, COLORS.accent]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.statusBanner}
+          >
+            <View style={styles.statusContent}>
+              <Text style={styles.statusTitle}>My Awesome Store</Text>
+              <Text style={styles.statusSubtitle}>Your store is active and ready to receive orders</Text>
             </View>
-            <View style={styles.statusBadge}>
-              <ChatBubbleLeftRightIcon size={16} color={COLORS.white} />
-              <Text style={styles.statusBadgeText}>WhatsApp Connected</Text>
+            <View style={styles.statusBadgesContainer}>
+              <View style={styles.statusBadge}>
+                <View style={styles.statusDot} />
+                <Text style={styles.statusBadgeText}>Store Active</Text>
+              </View>
+              <View style={styles.statusBadge}>
+                <ChatBubbleLeftRightIcon size={14} color={COLORS.white} />
+                <Text style={styles.statusBadgeText}>WhatsApp Connected</Text>
+              </View>
             </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+        </Animated.View>
 
-        {/* Quick Stats */}
+        {/* Quick Stats - Enhanced */}
         <View style={styles.statsGrid}>
           {/* Total Products */}
-          <View style={styles.statCard}>
-            <View style={styles.statContent}>
-              <View style={styles.statLeft}>
-                <Text style={styles.statLabel}>Total Products</Text>
-                <Text style={styles.statValue}>{stats.totalProducts}</Text>
-                <View style={styles.statTrend}>
-                  <ArrowUpIcon size={16} color="#10B981" />
-                  <Text style={styles.statTrendText}>12% from last month</Text>
+          <Animated.View entering={FadeInDown.duration(400).delay(300)}>
+            <LinearGradient
+              colors={['#FFFFFF', '#F8FAFF']}
+              style={styles.statCard}
+            >
+              <View style={styles.statHeader}>
+                <View style={[styles.statIconContainer, { backgroundColor: '#DBEAFE' }]}>
+                  <CubeIcon size={isSmallScreen ? 20 : 24} color={COLORS.primary} />
                 </View>
+                <Text style={styles.statLabel}>Total Products</Text>
               </View>
-              <View style={[styles.statIcon, { backgroundColor: '#DBEAFE' }]}>
-                <CubeIcon size={32} color={COLORS.primary} />
+              <Text style={styles.statValue}>{stats.totalProducts}</Text>
+              <View style={styles.statFooter}>
+                <View style={[styles.trendBadge, { backgroundColor: '#D1FAE5' }]}>
+                  <ArrowUpIcon size={12} color={COLORS.green} />
+                  <Text style={[styles.trendText, { color: COLORS.green }]}>
+                    {stats.productsChange}%
+                  </Text>
+                </View>
+                <Text style={styles.trendLabel}>vs last month</Text>
               </View>
-            </View>
-          </View>
+            </LinearGradient>
+          </Animated.View>
 
           {/* Orders Today */}
-          <View style={styles.statCard}>
-            <View style={styles.statContent}>
-              <View style={styles.statLeft}>
-                <Text style={styles.statLabel}>Orders Today</Text>
-                <Text style={styles.statValue}>{stats.ordersToday}</Text>
-                <View style={styles.statTrend}>
-                  <ArrowUpIcon size={16} color="#10B981" />
-                  <Text style={styles.statTrendText}>8% from yesterday</Text>
+          <Animated.View entering={FadeInDown.duration(400).delay(350)}>
+            <LinearGradient
+              colors={['#FFFFFF', '#F0FDF9']}
+              style={styles.statCard}
+            >
+              <View style={styles.statHeader}>
+                <View style={[styles.statIconContainer, { backgroundColor: '#D1FAE5' }]}>
+                  <ShoppingCartIcon size={isSmallScreen ? 20 : 24} color={COLORS.accent} />
                 </View>
+                <Text style={styles.statLabel}>Orders Today</Text>
               </View>
-              <View style={[styles.statIcon, { backgroundColor: '#D1FAE5' }]}>
-                <ShoppingCartIcon size={32} color={COLORS.accent} />
+              <Text style={styles.statValue}>{stats.ordersToday}</Text>
+              <View style={styles.statFooter}>
+                <View style={[styles.trendBadge, { backgroundColor: '#D1FAE5' }]}>
+                  <ArrowUpIcon size={12} color={COLORS.green} />
+                  <Text style={[styles.trendText, { color: COLORS.green }]}>
+                    {stats.ordersChange}%
+                  </Text>
+                </View>
+                <Text style={styles.trendLabel}>vs yesterday</Text>
               </View>
-            </View>
-          </View>
+            </LinearGradient>
+          </Animated.View>
 
           {/* Sales This Week */}
-          <View style={styles.statCard}>
-            <View style={styles.statContent}>
-              <View style={styles.statLeft}>
-                <Text style={styles.statLabel}>Sales This Week</Text>
-                <Text style={styles.statValue}>₦{stats.salesThisWeek.toLocaleString()}</Text>
-                <View style={styles.statTrend}>
-                  <ArrowDownIcon size={16} color="#EF4444" />
-                  <Text style={[styles.statTrendText, { color: '#DC2626' }]}>3% from last week</Text>
+          <Animated.View entering={FadeInDown.duration(400).delay(400)}>
+            <LinearGradient
+              colors={['#FFFFFF', '#FFFBF0']}
+              style={styles.statCard}
+            >
+              <View style={styles.statHeader}>
+                <View style={[styles.statIconContainer, { backgroundColor: '#FEF3C7' }]}>
+                  <CurrencyDollarIcon size={isSmallScreen ? 20 : 24} color={COLORS.yellow} />
                 </View>
+                <Text style={styles.statLabel}>Sales This Week</Text>
               </View>
-              <View style={[styles.statIcon, { backgroundColor: '#FEF3C7' }]}>
-                <CurrencyDollarIcon size={32} color="#D97706" />
+              <Text style={styles.statValue}>₦{stats.salesThisWeek.toLocaleString()}</Text>
+              <View style={styles.statFooter}>
+                <View style={[styles.trendBadge, { backgroundColor: '#FEE2E2' }]}>
+                  <ArrowDownIcon size={12} color={COLORS.red} />
+                  <Text style={[styles.trendText, { color: COLORS.red }]}>
+                    {Math.abs(stats.salesChange)}%
+                  </Text>
+                </View>
+                <Text style={styles.trendLabel}>vs last week</Text>
               </View>
-            </View>
-          </View>
+            </LinearGradient>
+          </Animated.View>
 
           {/* Pending Deliveries */}
-          <View style={styles.statCard}>
-            <View style={styles.statContent}>
-              <View style={styles.statLeft}>
+          <Animated.View entering={FadeInDown.duration(400).delay(450)}>
+            <LinearGradient
+              colors={['#FFFFFF', '#FAF5FF']}
+              style={styles.statCard}
+            >
+              <View style={styles.statHeader}>
+                <View style={[styles.statIconContainer, { backgroundColor: '#E9D5FF' }]}>
+                  <TruckIcon size={isSmallScreen ? 20 : 24} color={COLORS.purple} />
+                </View>
                 <Text style={styles.statLabel}>Pending Deliveries</Text>
-                <Text style={styles.statValue}>{stats.pendingDeliveries}</Text>
-                <View style={styles.statTrend}>
-                  <Text style={styles.statTrendGray}>2 urgent</Text>
+              </View>
+              <Text style={styles.statValue}>{stats.pendingDeliveries}</Text>
+              <View style={styles.statFooter}>
+                <View style={[styles.trendBadge, { backgroundColor: '#FFEDD5' }]}>
+                  <Text style={[styles.trendText, { color: '#EA580C' }]}>
+                    {stats.deliveriesUrgent} urgent
+                  </Text>
                 </View>
               </View>
-              <View style={[styles.statIcon, { backgroundColor: '#E9D5FF' }]}>
-                <TruckIcon size={32} color="#9333EA" />
-              </View>
-            </View>
-          </View>
+            </LinearGradient>
+          </Animated.View>
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsCard}>
+        <Animated.View entering={FadeInDown.duration(400).delay(500)} style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionDot} />
+              <Text style={styles.sectionTitle}>Quick Actions</Text>
+            </View>
+          </View>
+          <View style={styles.quickActionsGrid}>
             <TouchableOpacity
-              style={styles.actionButton}
+              style={styles.actionCard}
               onPress={() => navigation.navigate('Products')}
               activeOpacity={0.7}
             >
-              <PlusIcon size={20} color={COLORS.primary} />
-              <Text style={styles.actionButtonText}>Add Product</Text>
+              <LinearGradient
+                colors={['#DBEAFE', '#BFDBFE']}
+                style={styles.actionIconContainer}
+              >
+                <PlusIcon size={20} color={COLORS.primary} />
+              </LinearGradient>
+              <Text style={styles.actionText}>Add Product</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-              <ShareIcon size={20} color={COLORS.accent} />
-              <Text style={styles.actionButtonText}>Share Store Link</Text>
+            <TouchableOpacity style={styles.actionCard} activeOpacity={0.7}>
+              <LinearGradient
+                colors={['#D1FAE5', '#A7F3D0']}
+                style={styles.actionIconContainer}
+              >
+                <ShareIcon size={20} color={COLORS.accent} />
+              </LinearGradient>
+              <Text style={styles.actionText}>Share Store</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.actionButton}
+              style={styles.actionCard}
               onPress={() => navigation.navigate('WhatsApp')}
               activeOpacity={0.7}
             >
-              <ChatBubbleLeftRightIcon size={20} color={COLORS.primary} />
-              <Text style={styles.actionButtonText}>Configure WhatsApp</Text>
+              <LinearGradient
+                colors={['#DBEAFE', '#BFDBFE']}
+                style={styles.actionIconContainer}
+              >
+                <ChatBubbleLeftRightIcon size={20} color={COLORS.primary} />
+              </LinearGradient>
+              <Text style={styles.actionText}>WhatsApp</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.actionButton}
+              style={styles.actionCard}
               onPress={() => navigation.navigate('Analytics')}
               activeOpacity={0.7}
             >
-              <ChartBarIcon size={20} color={COLORS.accent} />
-              <Text style={styles.actionButtonText}>View Analytics</Text>
+              <LinearGradient
+                colors={['#D1FAE5', '#A7F3D0']}
+                style={styles.actionIconContainer}
+              >
+                <ChartBarIcon size={20} color={COLORS.accent} />
+              </LinearGradient>
+              <Text style={styles.actionText}>Analytics</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
-        {/* Sales Chart and Recent Orders */}
-        <View style={styles.chartsContainer}>
-          {/* Sales Chart */}
-          <View style={styles.chartCard}>
-            <View style={styles.chartHeader}>
-              <Text style={styles.chartTitle}>Sales This Week</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Analytics')}>
-                <Text style={styles.viewDetailsLink}>View Details</Text>
-              </TouchableOpacity>
+        {/* Sales Chart */}
+        <Animated.View entering={FadeInDown.duration(400).delay(550)} style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionDot} />
+              <Text style={styles.sectionTitle}>Sales This Week</Text>
             </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Analytics')}>
+              <Text style={styles.viewDetailsLink}>Details</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.chartCard}>
             <View style={styles.chartContent}>
               {salesData.map((data, index) => (
-                <View key={index} style={styles.chartRow}>
+                <Animated.View
+                  key={index}
+                  entering={FadeInUp.duration(400).delay(600 + index * 50)}
+                  style={styles.chartRow}
+                >
                   <Text style={styles.chartDay}>{data.day}</Text>
-                  <View style={styles.chartBarBackground}>
-                    <LinearGradient
-                      colors={[COLORS.primary, COLORS.accent]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={[
-                        styles.chartBarFill,
-                        { width: `${(data.sales / maxSales) * 100}%` },
-                      ]}
-                    />
-                  </View>
-                  <Text style={styles.chartAmount}>₦{data.sales.toLocaleString()}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          {/* Recent Orders */}
-          <View style={styles.ordersCard}>
-            <View style={styles.ordersHeader}>
-              <Text style={styles.ordersTitle}>Recent Orders</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Orders')}>
-                <Text style={styles.viewAllLink}>View All</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.ordersContent}>
-              {recentOrders.map((order, index) => (
-                <View key={index} style={styles.orderItem}>
-                  <View style={styles.orderLeft}>
-                    <Text style={styles.orderId}>{order.id}</Text>
-                    <Text style={styles.orderCustomer}>{order.customer}</Text>
-                    <Text style={styles.orderTime}>{order.time}</Text>
-                  </View>
-                  <View style={styles.orderRight}>
-                    <Text style={styles.orderAmount}>₦{order.amount.toLocaleString()}</Text>
-                    <View
-                      style={[
-                        styles.orderStatus,
-                        { backgroundColor: getStatusColor(order.status).bg },
-                      ]}
-                    >
-                      <Text
+                  <View style={styles.chartBarContainer}>
+                    <View style={styles.chartBarBackground}>
+                      <LinearGradient
+                        colors={[COLORS.primary, COLORS.accent]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
                         style={[
-                          styles.orderStatusText,
-                          { color: getStatusColor(order.status).text },
+                          styles.chartBarFill,
+                          { width: `${(data.sales / maxSales) * 100}%` },
                         ]}
                       >
-                        {order.status}
-                      </Text>
+                        <Text style={styles.chartBarText}>{data.orders}</Text>
+                      </LinearGradient>
                     </View>
                   </View>
-                </View>
+                  <Text style={styles.chartAmount}>₦{(data.sales / 1000).toFixed(1)}k</Text>
+                </Animated.View>
               ))}
             </View>
+            <View style={styles.chartFooter}>
+              <View style={styles.chartSummary}>
+                <Text style={styles.chartSummaryLabel}>Total</Text>
+                <Text style={styles.chartSummaryValue}>
+                  ₦{salesData.reduce((sum, d) => sum + d.sales, 0).toLocaleString()}
+                </Text>
+              </View>
+              <View style={styles.chartSummary}>
+                <Text style={styles.chartSummaryLabel}>Average</Text>
+                <Text style={styles.chartSummaryValue}>
+                  ₦{Math.round(salesData.reduce((sum, d) => sum + d.sales, 0) / salesData.length).toLocaleString()}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
+        </Animated.View>
 
-        <View style={{ height: 24 }} />
+        {/* Top Products */}
+        <Animated.View entering={FadeInDown.duration(400).delay(600)} style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={[styles.sectionDot, { backgroundColor: COLORS.accent }]} />
+              <Text style={styles.sectionTitle}>Top Products</Text>
+            </View>
+          </View>
+          <View style={styles.topProductsContainer}>
+            {topProducts.map((product, index) => (
+              <Animated.View
+                key={index}
+                entering={FadeInDown.duration(400).delay(650 + index * 100)}
+                style={styles.productCard}
+              >
+                <View style={styles.productRank}>
+                  <LinearGradient
+                    colors={[COLORS.primary, COLORS.accent]}
+                    style={styles.productRankCircle}
+                  >
+                    <Text style={styles.productRankText}>{index + 1}</Text>
+                  </LinearGradient>
+                </View>
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{product.name}</Text>
+                  <Text style={styles.productQuantity}>{product.quantity} sold</Text>
+                </View>
+                <View style={styles.productStats}>
+                  <Text style={styles.productSales}>₦{product.sales.toLocaleString()}</Text>
+                  <View
+                    style={[
+                      styles.productTrendBadge,
+                      { backgroundColor: product.trend >= 0 ? '#D1FAE5' : '#FEE2E2' },
+                    ]}
+                  >
+                    {product.trend >= 0 ? (
+                      <ArrowUpIcon size={10} color={COLORS.green} />
+                    ) : (
+                      <ArrowDownIcon size={10} color={COLORS.red} />
+                    )}
+                    <Text
+                      style={[
+                        styles.productTrendText,
+                        { color: product.trend >= 0 ? COLORS.green : COLORS.red },
+                      ]}
+                    >
+                      {Math.abs(product.trend)}%
+                    </Text>
+                  </View>
+                </View>
+              </Animated.View>
+            ))}
+          </View>
+        </Animated.View>
+
+        {/* Recent Orders */}
+        <Animated.View entering={FadeInDown.duration(400).delay(700)} style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionDot} />
+              <Text style={styles.sectionTitle}>Recent Orders</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Orders')}>
+              <Text style={styles.viewAllLink}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.ordersContainer}>
+            {recentOrders.map((order, index) => (
+              <Animated.View
+                key={index}
+                entering={FadeInDown.duration(400).delay(750 + index * 100)}
+                style={styles.orderCard}
+              >
+                <View style={styles.orderHeader}>
+                  <View style={styles.orderHeaderLeft}>
+                    <Text style={styles.orderId}>{order.id}</Text>
+                    <View style={styles.orderStatusIcon}>{getStatusIcon(order.status)}</View>
+                  </View>
+                  <Text style={styles.orderAmount}>₦{order.amount.toLocaleString()}</Text>
+                </View>
+                <Text style={styles.orderCustomer}>{order.customer}</Text>
+                <View style={styles.orderFooter}>
+                  <View style={styles.orderTimeContainer}>
+                    <ClockIcon size={12} color={COLORS.textLight} />
+                    <Text style={styles.orderTime}>{order.time}</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.orderStatusBadge,
+                      { backgroundColor: getStatusColor(order.status).bg },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.orderStatusText,
+                        { color: getStatusColor(order.status).text },
+                      ]}
+                    >
+                      {order.status}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.orderItems}>
+                  {order.items} {order.items === 1 ? 'item' : 'items'}
+                </Text>
+              </Animated.View>
+            ))}
+          </View>
+        </Animated.View>
+
+        <View style={{ height: 32 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -352,6 +575,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.surface,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+  },
   scrollView: {
     flex: 1,
     paddingHorizontal: isSmallScreen ? 12 : 16,
@@ -361,43 +596,70 @@ const styles = StyleSheet.create({
     marginBottom: isSmallScreen ? 16 : 20,
   },
   pageTitle: {
-    fontSize: isSmallScreen ? 24 : isMediumScreen ? 26 : 28,
-    fontFamily: 'Inter_700Bold',
+    fontSize: isSmallScreen ? 26 : isMediumScreen ? 28 : 32,
+    fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
+    marginBottom: 4,
   },
   pageSubtitle: {
-    fontSize: isSmallScreen ? 12 : 13,
+    fontSize: isSmallScreen ? 12 : 14,
     fontFamily: 'Inter_400Regular',
     color: COLORS.textLight,
-    marginTop: 4,
+    lineHeight: 20,
   },
-  statusBanner: {
-    padding: isSmallScreen ? 16 : 20,
-    borderRadius: isSmallScreen ? 10 : 12,
-    marginBottom: isSmallScreen ? 16 : 20,
+  testButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 20,
+  },
+  testButton: {
+    flex: 1,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
         shadowRadius: 8,
       },
-      android: { elevation: 3 },
+      android: { elevation: 4 },
+    }),
+  },
+  testButtonText: {
+    fontSize: isSmallScreen ? 13 : 15,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.white,
+  },
+  statusBanner: {
+    padding: isSmallScreen ? 16 : 20,
+    borderRadius: 16,
+    marginBottom: isSmallScreen ? 20 : 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: { elevation: 4 },
     }),
   },
   statusContent: {
-    marginBottom: isSmallScreen ? 10 : 12,
+    marginBottom: 12,
   },
   statusTitle: {
-    fontSize: isSmallScreen ? 16 : 18,
-    fontFamily: 'Inter_600SemiBold',
+    fontSize: isSmallScreen ? 17 : 19,
+    fontFamily: 'Inter_700Bold',
     color: COLORS.white,
+    marginBottom: 4,
   },
   statusSubtitle: {
     fontSize: isSmallScreen ? 12 : 13,
     fontFamily: 'Inter_400Regular',
-    color: 'rgba(255, 255, 255, 0.9)',
-    marginTop: 4,
+    color: 'rgba(255, 255, 255, 0.95)',
   },
   statusBadgesContainer: {
     flexDirection: 'row',
@@ -407,157 +669,112 @@ const styles = StyleSheet.create({
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 10,
+    gap: 6,
   },
   statusDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#4ADE80',
-    marginRight: 6,
   },
   statusBadgeText: {
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.white,
-    marginLeft: 6,
   },
   statsGrid: {
-    marginBottom: 20,
+    gap: isSmallScreen ? 12 : 16,
+    marginBottom: isSmallScreen ? 20 : 24,
   },
   statCard: {
-    backgroundColor: COLORS.white,
+    borderRadius: 16,
     padding: isSmallScreen ? 16 : 20,
-    borderRadius: isSmallScreen ? 10 : 12,
     borderWidth: 1,
     borderColor: COLORS.border,
-    marginBottom: isSmallScreen ? 10 : 12,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
       },
-      android: { elevation: 2 },
+      android: { elevation: 3 },
     }),
   },
-  statContent: {
+  statHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
+    gap: 10,
   },
-  statLeft: {
-    flex: 1,
+  statIconContainer: {
+    width: isSmallScreen ? 36 : 40,
+    height: isSmallScreen ? 36 : 40,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   statLabel: {
     fontSize: isSmallScreen ? 12 : 13,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textLight,
+    flex: 1,
   },
   statValue: {
-    fontSize: isSmallScreen ? 24 : isMediumScreen ? 26 : 28,
-    fontFamily: 'Inter_700Bold',
+    fontSize: isSmallScreen ? 28 : isMediumScreen ? 32 : 36,
+    fontFamily: 'Inter_800ExtraBold',
     color: COLORS.textDark,
-    marginTop: isSmallScreen ? 4 : 6,
+    marginBottom: 8,
   },
-  statTrend: {
+  statFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: isSmallScreen ? 4 : 6,
+    gap: 6,
   },
-  statTrendText: {
-    fontSize: isSmallScreen ? 11 : 13,
-    fontFamily: 'Inter_400Regular',
-    color: '#10B981',
-    marginLeft: 4,
+  trendBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    gap: 4,
   },
-  statTrendGray: {
-    fontSize: isSmallScreen ? 11 : 13,
+  trendText: {
+    fontSize: isSmallScreen ? 11 : 12,
+    fontFamily: 'Inter_700Bold',
+  },
+  trendLabel: {
+    fontSize: isSmallScreen ? 11 : 12,
     fontFamily: 'Inter_400Regular',
     color: COLORS.textLight,
   },
-  statIcon: {
-    width: isSmallScreen ? 48 : 56,
-    height: isSmallScreen ? 48 : 56,
-    borderRadius: isSmallScreen ? 24 : 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   section: {
-    marginBottom: 20,
+    marginBottom: isSmallScreen ? 20 : 24,
   },
-  sectionTitle: {
-    fontSize: 17,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textDark,
-    marginBottom: 12,
-  },
-  actionsCard: {
-    backgroundColor: COLORS.white,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 2 },
-    }),
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: '#D1D5DB',
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 12,
-  },
-  actionButtonText: {
-    fontSize: 14,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textDark,
-    marginLeft: 8,
-  },
-  chartsContainer: {
-    marginBottom: 20,
-  },
-  chartCard: {
-    backgroundColor: COLORS.white,
-    padding: isSmallScreen ? 14 : 20,
-    borderRadius: isSmallScreen ? 10 : 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: isSmallScreen ? 12 : 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 2 },
-    }),
-  },
-  chartHeader: {
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: isSmallScreen ? 14 : 20,
+    marginBottom: 12,
   },
-  chartTitle: {
-    fontSize: isSmallScreen ? 15 : 17,
-    fontFamily: 'Inter_600SemiBold',
+  sectionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  sectionDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: COLORS.primary,
+  },
+  sectionTitle: {
+    fontSize: isSmallScreen ? 17 : 19,
+    fontFamily: 'Inter_700Bold',
     color: COLORS.textDark,
   },
   viewDetailsLink: {
@@ -565,148 +782,247 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.primary,
   },
-  chartContent: {
-    gap: isSmallScreen ? 8 : 12,
-  },
-  chartRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: isSmallScreen ? 6 : 8,
-  },
-  chartDay: {
-    width: isSmallScreen ? 30 : 36,
-    fontSize: isSmallScreen ? 11 : 13,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textLight,
-  },
-  chartBarBackground: {
-    flex: 1,
-    height: isSmallScreen ? 24 : 32,
-    backgroundColor: '#F3F4F6',
-    borderRadius: isSmallScreen ? 6 : 8,
-    overflow: 'hidden',
-  },
-  chartBarFill: {
-    height: '100%',
-    borderRadius: isSmallScreen ? 6 : 8,
-  },
-  chartAmount: {
-    width: isSmallScreen ? 65 : 80,
-    fontSize: isSmallScreen ? 11 : 13,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textDark,
-    textAlign: 'right',
-  },
-  ordersCard: {
-    backgroundColor: COLORS.white,
-    padding: isSmallScreen ? 14 : 20,
-    borderRadius: isSmallScreen ? 10 : 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 2 },
-    }),
-  },
-  ordersHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: isSmallScreen ? 12 : 16,
-  },
-  ordersTitle: {
-    fontSize: isSmallScreen ? 15 : 17,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textDark,
-  },
   viewAllLink: {
     fontSize: isSmallScreen ? 12 : 13,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.primary,
   },
-  ordersContent: {
-    gap: isSmallScreen ? 8 : 12,
-  },
-  orderItem: {
+  quickActionsGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  actionCard: {
+    width: (width - (isSmallScreen ? 36 : 44)) / 2,
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: isSmallScreen ? 16 : 20,
+    borderWidth: 2,
+    borderStyle: 'dashed',
     borderColor: COLORS.border,
-    borderRadius: isSmallScreen ? 8 : 10,
-    padding: isSmallScreen ? 12 : 14,
+    alignItems: 'center',
+    gap: 10,
   },
-  orderLeft: {
-    flex: 1,
+  actionIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  orderId: {
+  actionText: {
     fontSize: isSmallScreen ? 13 : 14,
     fontFamily: 'Inter_600SemiBold',
     color: COLORS.textDark,
+    textAlign: 'center',
+  },
+  chartCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: isSmallScreen ? 16 : 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: { elevation: 3 },
+    }),
+  },
+  chartContent: {
+    gap: isSmallScreen ? 10 : 12,
+    marginBottom: 16,
+  },
+  chartRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  chartDay: {
+    width: isSmallScreen ? 32 : 36,
+    fontSize: isSmallScreen ? 11 : 12,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.textDark,
+  },
+  chartBarContainer: {
+    flex: 1,
+  },
+  chartBarBackground: {
+    height: isSmallScreen ? 28 : 32,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  chartBarFill: {
+    height: '100%',
+    borderRadius: 8,
+    justifyContent: 'center',
+    paddingLeft: 8,
+  },
+  chartBarText: {
+    fontSize: 10,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.white,
+  },
+  chartAmount: {
+    width: isSmallScreen ? 45 : 50,
+    fontSize: isSmallScreen ? 11 : 12,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.textDark,
+    textAlign: 'right',
+  },
+  chartFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  chartSummary: {
+    alignItems: 'center',
+  },
+  chartSummaryLabel: {
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textLight,
+    marginBottom: 4,
+  },
+  chartSummaryValue: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.textDark,
+  },
+  topProductsContainer: {
+    gap: 10,
+  },
+  productCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    padding: isSmallScreen ? 14 : 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  productRank: {},
+  productRankCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  productRankText: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.white,
+  },
+  productInfo: {
+    flex: 1,
+  },
+  productName: {
+    fontSize: isSmallScreen ? 13 : 14,
+    fontFamily: 'Inter_600SemiBold',
+    color: COLORS.textDark,
+    marginBottom: 2,
+  },
+  productQuantity: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    color: COLORS.textLight,
+  },
+  productStats: {
+    alignItems: 'flex-end',
+    gap: 6,
+  },
+  productSales: {
+    fontSize: isSmallScreen ? 13 : 14,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.textDark,
+  },
+  productTrendBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 6,
+    gap: 3,
+  },
+  productTrendText: {
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
+  },
+  ordersContainer: {
+    gap: 12,
+  },
+  orderCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    padding: isSmallScreen ? 14 : 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  orderHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  orderId: {
+    fontSize: isSmallScreen ? 14 : 15,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.textDark,
+  },
+  orderStatusIcon: {},
+  orderAmount: {
+    fontSize: isSmallScreen ? 14 : 15,
+    fontFamily: 'Inter_700Bold',
+    color: COLORS.primary,
   },
   orderCustomer: {
     fontSize: isSmallScreen ? 12 : 13,
     fontFamily: 'Inter_400Regular',
     color: COLORS.textLight,
-    marginTop: 2,
+    marginBottom: 8,
+  },
+  orderFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  orderTimeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   orderTime: {
-    fontSize: isSmallScreen ? 11 : 12,
+    fontSize: 11,
     fontFamily: 'Inter_400Regular',
-    color: '#9CA3AF',
-    marginTop: 2,
+    color: COLORS.textLight,
   },
-  orderRight: {
-    alignItems: 'flex-end',
-  },
-  orderAmount: {
-    fontSize: isSmallScreen ? 13 : 14,
-    fontFamily: 'Inter_600SemiBold',
-    color: COLORS.textDark,
-    marginBottom: isSmallScreen ? 4 : 6,
-  },
-  orderStatus: {
-    paddingHorizontal: isSmallScreen ? 8 : 10,
-    paddingVertical: isSmallScreen ? 3 : 4,
-    borderRadius: isSmallScreen ? 8 : 10,
+  orderStatusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
   },
   orderStatusText: {
-    fontSize: isSmallScreen ? 10 : 11,
+    fontSize: 11,
     fontFamily: 'Inter_600SemiBold',
   },
-  testButtonsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20,
-  },
-  testButton: {
-    flex: 1,
-    backgroundColor: '#3B5BDB',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#3B5BDB',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  testButtonText: {
-    fontSize: 16,
-    fontFamily: 'Inter_600SemiBold',
-    color: '#FFFFFF',
+  orderItems: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    color: COLORS.textLight,
   },
 });
 

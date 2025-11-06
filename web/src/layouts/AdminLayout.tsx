@@ -62,7 +62,7 @@ export default function AdminLayout() {
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6">
             <Link to="/admin/dashboard" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#3B5BDB] to-[#00C896]" />
+              <div className="h-8 w-8 rounded-lg bg-[#3B5BDB]" />
               <span className="text-xl font-bold text-gray-900">Admin Panel</span>
             </Link>
             <button
@@ -84,7 +84,7 @@ export default function AdminLayout() {
                       to={item.path}
                       className={`flex items-center space-x-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
                         isActive
-                          ? 'bg-gradient-to-r from-[#3B5BDB] to-[#00C896] text-white'
+                          ? 'bg-[#3B5BDB] text-white'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
                       onClick={() => setSidebarOpen(false)}
@@ -151,7 +151,7 @@ export default function AdminLayout() {
                   onClick={() => setProfileOpen(!profileOpen)}
                   className="flex items-center space-x-2 rounded-lg p-2 hover:bg-gray-100"
                 >
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#3B5BDB] to-[#00C896]" />
+                  <div className="h-8 w-8 rounded-full bg-[#3B5BDB]" />
                   <span className="hidden text-sm font-medium text-gray-700 sm:block">
                     Admin User
                   </span>

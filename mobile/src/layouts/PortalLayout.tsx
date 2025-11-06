@@ -11,7 +11,6 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
   HomeIcon,
   CubeIcon,
@@ -95,12 +94,7 @@ export default function PortalLayout({ navigation, children, currentScreen }: Po
         </TouchableOpacity>
 
         <View style={styles.logoContainer}>
-          <LinearGradient
-            colors={[COLORS.primary, COLORS.accent]}
-            style={styles.logoGradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          />
+          <View style={styles.logoBox} />
           <Text style={styles.logoText}>ShopLynk</Text>
         </View>
 
@@ -126,12 +120,7 @@ export default function PortalLayout({ navigation, children, currentScreen }: Po
             {/* Sidebar Header */}
             <View style={styles.sidebarHeader}>
               <View style={styles.sidebarLogoContainer}>
-                <LinearGradient
-                  colors={[COLORS.primary, COLORS.accent]}
-                  style={styles.sidebarLogoGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                />
+                <View style={styles.sidebarLogoBox} />
                 <Text style={styles.sidebarLogoText}>ShopLynk</Text>
               </View>
               <TouchableOpacity
@@ -157,15 +146,10 @@ export default function PortalLayout({ navigation, children, currentScreen }: Po
                     style={styles.navItemContainer}
                   >
                     {isActive ? (
-                      <LinearGradient
-                        colors={[COLORS.primary, COLORS.accent]}
-                        style={styles.navItem}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                      >
+                      <View style={styles.navItemActive}>
                         <Icon size={20} color={COLORS.white} />
                         <Text style={styles.navItemTextActive}>{item.name}</Text>
-                      </LinearGradient>
+                      </View>
                     ) : (
                       <View style={styles.navItemInactive}>
                         <Icon size={20} color={COLORS.textLight} />
@@ -234,10 +218,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  logoGradient: {
+  logoBox: {
     width: 32,
     height: 32,
     borderRadius: 8,
+    backgroundColor: COLORS.primary,
   },
   logoText: {
     fontSize: 20,
@@ -297,10 +282,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  sidebarLogoGradient: {
+  sidebarLogoBox: {
     width: 32,
     height: 32,
     borderRadius: 8,
+    backgroundColor: COLORS.primary,
   },
   sidebarLogoText: {
     fontSize: 20,
@@ -318,13 +304,14 @@ const styles = StyleSheet.create({
   navItemContainer: {
     marginBottom: 4,
   },
-  navItem: {
+  navItemActive: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
     gap: 12,
+    backgroundColor: COLORS.primary,
   },
   navItemInactive: {
     flexDirection: 'row',
