@@ -1,0 +1,22 @@
+feat: Add onboarding screens and security improvements
+
+Onboarding Features:
+- World-class onboarding for mobile (React Native) and web
+- 3 slides: Connect Buyers, Compare Prices, Manage Store
+- Smooth animations and transitions
+- First-launch detection with AsyncStorage/localStorage
+- Test buttons in dashboards for easy testing
+
+Security Improvements:
+- Remove API key patterns from all documentation
+- Add .claude/settings.local.json to .gitignore
+- Obfuscate sensitive patterns in docs
+- Comprehensive security documentation
+
+Files Added:
+- mobile/src/screens/OnboardingScreen.tsx
+- web/src/pages/Onboarding.tsx
+- ONBOARDING_IMPLEMENTATION.md
+- TESTING_ONBOARDING.md
+- GITHUB_PUSH_PROTECTION_FIX.md
+- SECURITY_FIX_SUMMARY.md (with redacted patterns)
