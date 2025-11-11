@@ -5,15 +5,30 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.svg",
+    "splash": {
+      "image": "./assets/splash.svg",
+      "resizeMode": "contain",
+      "backgroundColor": "#F5F7FF"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shoplynk.app"
+      "bundleIdentifier": "com.shoplynk.app",
+      "icon": "./assets/icon.svg"
     },
     "android": {
-      "package": "com.shoplynk.app"
+      "package": "com.shoplynk.app",
+      "icon": "./assets/icon.svg",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.svg",
+        "backgroundColor": "#3B5BDB"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "apiUrl": "http://localhost:5000/api",

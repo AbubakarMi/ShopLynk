@@ -1,0 +1,23 @@
+{
+  "name": "ShopLynk - WhatsApp Store Builder",
+  "short_name": "ShopLynk",
+  "description": "Your WhatsApp Store in Minutes",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#3B5BDB",
+  "background_color": "#F5F7FF",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}

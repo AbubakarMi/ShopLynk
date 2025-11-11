@@ -1,0 +1,28 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B5BDB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3046C5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background (with safe zone for Android adaptive icons) -->
+  <rect width="1024" height="1024" fill="url(#bg-gradient)"/>
+
+  <!-- Shopping bag icon in white (centered in safe zone) -->
+  <path d="M368 336L304 400v384a64 64 0 0 0 64 64h288a64 64 0 0 0 64-64V400l-64-64z"
+        stroke="white"
+        stroke-width="40"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+  <line x1="304" y1="400" x2="720" y2="400"
+        stroke="white"
+        stroke-width="40"
+        stroke-linecap="round"/>
+  <path d="M592 512a80 80 0 0 1-160 0"
+        stroke="white"
+        stroke-width="40"
+        stroke-linecap="round"
+        fill="none"/>
+</svg>
